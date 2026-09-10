@@ -8,6 +8,7 @@ dependencies = [
     "soda-core>=3.3,<4.0",
     "soda-core-duckdb>=3.3,<4.0",
     "setuptools",
+    "dbt-metricflow[duckdb]>=0.14.0",
 ]
 
 [tool.uv]

@@ -1,52 +1,55 @@
 # Lab 4 · Every reader, and checks in front of the agent
 
-**Goal:** name every reader of the payments table, and stop the agent from reading bad data. **Time:** Part A 12 minutes. Part B 12 minutes, with your trainer's two demos.
+**Part A 12 minutes, Part B 12 minutes** · Name every reader of the payments table, and stop the agent from reading bad data.
 
-> This page stays on the left. Click a file name on it, and the file opens on the right.
+> This page stays on the left. Click a file name to open it on the right.
 
 ## Part A · Every reader, named
 
-1. Open [`models/lab4_exposures.yml`](../models/lab4_exposures.yml). An exposure tells dbt who reads a table from outside dbt: the dashboard, the finance close, and the reorder agent.
-2. Run. The `+` means "and everything built from it".
+### 1 · List the readers
 
-   ```bash
-   uv run dbt ls --select stg_pos_payments+
-   ```
+Open [`models/lab4_exposures.yml`](../models/lab4_exposures.yml). An exposure tells dbt who reads a table from outside dbt.
 
-   You see: three lines that start with `exposure:`, then the tables and tests.
-3. Answer: which reader reads the payments table itself? Who owns each reader?
-4. The reorder agent's owner is `nobody`. Change `nobody` to a person's name, and keep the `{ }` around it. Save (Cmd+S, or Ctrl+S on Windows). Answer: why a name, and not "the team"?
+```bash
+uv run dbt ls --select stg_pos_payments+
+```
+
+**You see:** three lines that start with `exposure:`.
+
+### 2 · Your turn
+
+1. The agent's owner is `nobody`. Change it to a person's name.
+2. Add a fourth reader: the weekly email to the café managers. Copy the `revenue_dashboard` block. Change the name to `weekly_cafe_email`, the type to `application`, and the owner to a person.
+3. Save, and check:
+
+```bash
+uv run check.py 4a
+```
+
+**You see:** `4 of 4 done. Well done.`
 
 **Stop here.** Your trainer shows the agent first.
 
 ## Part B · Checks in front of the agent
 
-5. Run the agent's read command for 2 June:
-
-   ```bash
-   uv run python agent_tools.py read 2026-06-02
-   ```
-
-   You see: `Yesterday's takings: EUR 4,012.80`. That is the frozen number that the agent orders from.
-6. Open [`agent_tools.py`](../agent_tools.py). Change `GATE = False` to `GATE = True`. Save.
-7. Run both mornings again:
-
-   ```bash
-   uv run python agent_tools.py read 2026-05-31
-   ```
-
-   ```bash
-   uv run python agent_tools.py read 2026-06-02
-   ```
-
-
-   You see: 31 May gives the takings, `EUR 5,481.40`. 2 June gives `HOLD: 2 checks failed`.
-8. Answer: what runs now before the agent reads?
-
-**Done early?** Run it for 15 June. How many checks fail? Is holding the order right?
+### 3 · Read 2 June
 
 ```bash
-uv run python agent_tools.py read 2026-06-15
+uv run python agent_tools.py read 2026-06-02
 ```
 
-**Stuck?** No `HOLD` on 2 June: save `agent_tools.py`, and check that `GATE = True`.
+**You see:** `EUR 4,012.80`. The agent orders from this frozen number.
+
+### 4 · Your turn
+
+Open [`agent_tools.py`](../agent_tools.py). Change `GATE = False` to `GATE = True`. Save, and check:
+
+```bash
+uv run check.py 4b
+```
+
+**You see:** `3 of 3 done. Well done.` Now the agent gets HOLD on 2 June.
+
+**Talk:** why a person's name as owner, and not "the team"?
+
+**Stuck?** "31 May: ✗": your Lab 3 limit is too tight. Fix it in Lab 3 first.

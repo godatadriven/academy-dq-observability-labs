@@ -1,25 +1,36 @@
 # Lab 1 · Six defects, six tests
 
-**Goal:** see Module 1's six defects caught by dbt tests. **Time:** 20 minutes.
+**20 minutes** · Catch Module 1's six defects with dbt tests.
 
-> This page stays on the left. Click a file name on it, and the file opens on the right.
->
-> To run a command: hover over the grey box, click the copy icon, click in the terminal, paste, and press Enter.
+> This page stays on the left. Click a file name to open it on the right.
+> To run a command: copy it, paste it in the terminal, press Enter.
 
-1. Open [`seeds/lab1_tests.yml`](../seeds/lab1_tests.yml). Each comment names one defect from Module 1's "Spot the defects". The table is a seed: a CSV file that dbt loads. So the file starts with `seeds:`, not `models:`.
-2. Run:
+### 1 · Run the tests
 
-   ```bash
-   uv run dbt test --select orders_daily_extract
-   ```
+Open [`seeds/lab1_tests.yml`](../seeds/lab1_tests.yml). There is one test for each defect.
 
-   `--select` runs only the tests on that table. You see: six lines with `FAIL 1`. The last line says `ERROR=6`: dbt counts a failed test as an error. Each test found one bad row.
-3. Answer: which test catches which defect?
-4. Answer: which test is built in, which come from the package `dbt_expectations`, and which one is a query? The query is [`tests/lab1_updated_before_placed.sql`](../tests/lab1_updated_before_placed.sql).
-5. Change `min_value: 0` to `min_value: -200`. Save (Cmd+S, or Ctrl+S on Windows). Run step 2 again.
+```bash
+uv run dbt test --select orders_daily_extract
+```
 
-   You see: `ERROR=5`. Answer: why does that test pass now? Then change it back to `0`.
+**You see:** six lines with `FAIL 1`. Each test found a bad row.
 
-**Done early?** Why do most of the six need more than a built-in test?
+### 2 · Your turn
 
-**Stuck?** Nothing changed after an edit: save the file, then run it again.
+Finance says: no order is above €1,000. Add that test.
+
+1. Under `order_total`, copy the test that is there.
+2. In your copy, change `min_value: 0` to `max_value: 1000`.
+3. Save: Cmd+S, or Ctrl+S on Windows.
+
+### 3 · Check
+
+```bash
+uv run check.py 1
+```
+
+**You see:** `2 of 2 done. Well done.`
+
+**Talk:** your test fails on one order of €1,310. Is the order wrong, or the rule?
+
+**Stuck?** A ✗ line tells you what to fix.
