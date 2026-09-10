@@ -3,5 +3,7 @@
   "workbench.editorAssociations": {
     "**/labs/lab*.md": "vscode.markdown.preview.editor"
   },
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "markdown.preview.openMarkdownLinks": "inEditor",
+  "markdown.links.openLocation": "beside"
 }

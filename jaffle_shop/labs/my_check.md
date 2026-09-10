@@ -10,7 +10,7 @@ The owner, a person's name:
 
 Where it runs, and when:
 
-The check, as code. Keep one template and delete the other. Replace each `______`.
+The check, as code. Keep one template and delete the others. Replace each `______`.
 
 A dbt test:
 
@@ -29,4 +29,19 @@ A Soda check:
 checks for ______:
   - ______:
       name: "______"
+```
+
+A contract, like Lab 2:
+
+```yaml
+models:
+  - name: ______
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: ______
+        data_type: ______
+        constraints:
+          - type: ______
 ```

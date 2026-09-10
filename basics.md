@@ -34,7 +34,7 @@ models:
         data_tests:
           - accepted_values:
               arguments:
-                values: ['credit_card', 'coupon']
+                values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
 ```
 
 | You see | It means |
