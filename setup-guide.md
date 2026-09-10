@@ -1,164 +1,70 @@
 # Setup guide · Module 2
 
-Do both parts before the day. Part 1 installs the labs, in about 45 minutes. Part 2 shows how the labs work, in about 10 minutes. Setup on the day takes lab time.
+The labs run in **GitHub Codespaces**: VS Code in your browser, with everything already installed. You install nothing on your laptop.
 
-# Part 1 · Install the labs
+Do both parts before the day. Part 1 takes about 10 minutes. Part 2 takes about 10 minutes.
 
-## Step 0 — Check that you can install software
-
-Try to install one small program today. If your laptop blocks it, ask your IT desk now, not on the day.
+# Part 1 · Open your codespace
 
 ## Step 1 — Bring
 
-- A laptop where you can install software.
-- Wi-Fi access. On a client site, ask your host for guest access.
+- A laptop with a browser, and Wi-Fi. On a client site, ask your host for guest access.
+- A GitHub account. No account? Create one for free at <https://github.com/signup>.
 - Your standard from Module 1: the rule you wrote under your incident on the Miro board. A photo is fine.
 
-## Step 2 — Open a terminal
+## Step 2 — Create your codespace
 
-A terminal is a window where you type a command and press Enter.
+1. Sign in to GitHub.
+2. Open <https://github.com/xebia/dq-observability-labs>.
+3. Click the green **Code** button, then the **Codespaces** tab, then **Create codespace on main**.
+4. Wait about three minutes. VS Code opens in your browser. The terminal at the bottom builds the sandbox by itself.
 
-- **Mac:** press Cmd+Space, type `Terminal`, press Enter.
-- **Windows:** press the Start key, type `PowerShell`, press Enter.
-
-How to use it:
-
-- Copy one command at a time from this guide. Paste it, press Enter, and wait until the terminal is ready for the next line.
-- The text before your cursor is the **prompt**. It shows the folder you are in.
-- Press ↑ to get the last command back. Change it, then press Enter.
-- Press Ctrl+C to stop a command. It also clears a stuck line, for example `quote>`.
-- Read the last line of the output first. It tells you the result.
-
-## Step 3 — Install the tools
-
-After each tool, run its check. If the output does not match, fix that tool before you continue.
-
-### 3.1 Git
-
-Mac:
-
-```bash
-xcode-select --install
-```
-
-A window opens. Click Install. It can take 15 minutes.
-
-Windows: download and run the installer from <https://git-scm.com/download/win>. Keep every default.
-
-Check:
-
-```bash
-git --version
-```
-
-Expected: a version line, for example `git version 2.45.0`.
-
-### 3.2 uv
-
-`uv` installs Python and the tools for you. You do not need your own Python.
-
-Windows, in PowerShell:
-
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-Mac:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-Close the terminal and open a new one. Then check:
-
-```bash
-uv --version
-```
-
-Expected: `uv 0.x.x` or later.
-
-### 3.3 VS Code
-
-Install VS Code from <https://code.visualstudio.com>. The labs use it: one window holds the lab files and the terminal.
-
-## Step 4 — Get the labs and build them
-
-1. Go to your home folder, so you can find the labs later:
-
-```bash
-cd ~
-```
-
-2. Get the labs. Do not use "Download ZIP" on GitHub: the labs need git.
-
-```bash
-git clone https://github.com/xebia/dq-observability-labs.git
-```
-
-3. In VS Code, choose **File > Open Folder**, and open the folder `dq-observability-labs` in your home folder. When VS Code asks if you trust the authors, click **Yes, I trust the authors**.
-4. In VS Code, choose **Terminal > New Terminal**. The terminal opens at the bottom. From now on, use this terminal. The last folder name before your cursor must be `jaffle_shop`. If it is not, see "Common problems".
-5. Build the sandbox:
-
-```bash
-uv run build.py
-```
-
-It takes about one minute. It installs Python and the two tools of the day, builds the tables, and checks them:
-
-- **dbt** builds tables from SQL files and tests them.
-- **Soda** checks a table and says PASSED or FAILED for each rule.
-
-The last line must be:
+The last line in the terminal must be:
 
 ```
 Ready. Module 1's four tests pass, and Soda can read the tables.
 ```
 
-The database is one local file, `jaffle_shop.duckdb`. Nothing connects to the cloud.
+The two tools of the day are already in it:
 
-In the labs, you type dbt and Soda commands the same way, with `uv run` in front, for example `uv run dbt test`.
+- **dbt** builds tables from SQL files and tests them.
+- **Soda** checks a table and says PASSED or FAILED for each rule.
 
-## Step 5 — Tell your trainer
+## Step 3 — Tell your trainer
 
-Reply to the setup email with two lines: the last line of `uv run build.py`, and whether you had used a terminal before today (yes or no).
+Reply to the setup email with two lines: the `Ready` line, and whether you had used a terminal before (yes or no).
+
+## Step 4 — On the day
+
+Open <https://github.com/codespaces> and click your codespace. It keeps your work. It stops by itself when you do not use it, and it does not use up your free hours while it is stopped.
 
 ## Common problems
 
 | What you see | What to do |
 | --- | --- |
-| The last folder name before the cursor is not `jaffle_shop` | Close the terminal. In VS Code, check that you opened the folder `dq-observability-labs`. Open a new terminal. |
-| `No pyproject.toml found` | You are in the wrong folder. Same fix as above. |
-| `quote>` or `>` and nothing happens | The terminal waits for a closing quote. Press Ctrl+C and paste the command again. |
-| `uv: command not found` after the install | Close and open the terminal. If it still fails on a Mac, run `source ~/.zshrc`. |
-| Windows: script execution is blocked when you install uv | Run PowerShell as administrator and repeat the `uv` install command. |
-| `uv run build.py` hangs or fails on a company network | A proxy blocks the download. Ask IT for the proxy settings, or use a personal hotspot for the install. |
-| It tries to build `duckdb` and fails | Run `uv python install 3.12`, then `uv run build.py` again. |
-| `Could not set lock on file ... jaffle_shop.duckdb` | Another program has the database open. Close it, then run the command again. |
-| `Configuration path 'soda/configuration.yml' does not exist` | You are in the wrong folder. Open a new terminal in VS Code. |
-| `Step N failed` | Read the lines above it. Then find them in this table. |
-| Still stuck | Email the trainer before the day, with the full error text. On the day, arrive 20 minutes early. |
+| No **Codespaces** tab, or your company blocks it | Use a personal laptop or a personal browser profile. Or follow "No Codespaces?" at the end. |
+| The terminal shows `Step N failed` | Click in the terminal and run `uv run build.py`. |
+| No `Ready` line, and the terminal is gone | Choose the menu (☰) > **Terminal** > **New Terminal**. Then run `uv run build.py`. |
+| You deleted the codespace | Create a new one, as in Step 2. |
+| Still stuck | Email the trainer before the day, with a screenshot. On the day, arrive 20 minutes early. |
 
 # Part 2 · How the labs work
 
-Read this once, with the labs open in VS Code. Nobody expects you to know YAML or dbt before the day.
+Read this once, with your codespace open. Nobody expects you to know YAML or dbt before the day.
 
-## The terminal in VS Code
+## The terminal
 
-Mac:
-
-```
-you@laptop jaffle_shop %
-```
-
-Windows:
+A terminal is where you type a command and press Enter. In your codespace, it is at the bottom of the window. If it is not there, choose the menu (☰) > **Terminal** > **New Terminal**.
 
 ```
-PS C:\Users\you\dq-observability-labs\jaffle_shop>
+@you ➜ /workspaces/dq-observability-labs/jaffle_shop $
 ```
 
-- The last folder name in the prompt must be `jaffle_shop`.
-- Put `uv run` in front of every dbt, Soda, or Python command. It uses the tools that `build.py` installed.
-- Lost? Close the terminal and open a new one.
+- The text before your cursor is the **prompt**. The last folder name in it must be `jaffle_shop`.
+- Copy one command from a lab page, paste it, and press Enter. Wait until the prompt comes back.
+- Put `uv run` in front of every dbt, Soda, or Python command. The lab pages already do.
+- Press ↑ to get the last command back. Press Ctrl+C to stop a command.
+- Lost? Close the terminal with the bin icon, and open a new one.
 
 The last line of the output tells you the result:
 
@@ -232,6 +138,32 @@ Everything happens in `jaffle_shop/`.
 
 ## How a lab works
 
-Open the lab's page, for example `labs/lab1.md`. To read it as a page, right-click it and choose **Open Preview**. Then follow the steps: open a file, run a command, compare with "You see", and answer the questions. Some steps ask you to change one value. Save the file (Cmd+S, Windows: Ctrl+S) before you run the command again.
+Open the lab's page, for example `labs/lab1.md`. To read it as a page, right-click it and choose **Open Preview**. Then follow the steps: open a file, run a command, compare with "You see", and answer the questions. Some steps ask you to change one value. Save the file (Cmd+S on a Mac, Ctrl+S on Windows) before you run the command again.
 
 To put a file back as it was, run `git checkout` and the file name, for example `git checkout seeds/lab1_tests.yml`.
+
+# No Codespaces? Install it on your laptop
+
+Use this only when Codespaces is blocked. It takes about 45 minutes.
+
+1. Install git: on a Mac, run `xcode-select --install` in the Terminal app. On Windows, install it from <https://git-scm.com/download/win>.
+2. Install uv: follow <https://docs.astral.sh/uv/getting-started/installation/>. Then close and open the terminal.
+3. Install VS Code from <https://code.visualstudio.com>.
+4. In a terminal, run these, one at a time:
+
+```bash
+cd ~
+```
+
+```bash
+git clone https://github.com/xebia/dq-observability-labs.git
+```
+
+5. In VS Code, choose **File > Open Folder**, open `dq-observability-labs`, and trust the authors.
+6. Choose **Terminal > New Terminal**. It starts in `jaffle_shop`. Run:
+
+```bash
+uv run build.py
+```
+
+The last line must start with `Ready`. If a company network blocks the download, use a personal hotspot.

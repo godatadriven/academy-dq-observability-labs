@@ -13,7 +13,7 @@ payment app ──► stg_pos_events ──► stg_pos_payments ──► revenu
 
 ## Before the day
 
-Follow `setup-guide.md`. Part 1 installs the labs, in about 45 minutes. Part 2 shows how the labs work: the terminal, a YAML file, and the folders, in about 10 minutes.
+Follow `setup-guide.md`. Part 1 opens the labs in GitHub Codespaces, VS Code in your browser, in about 10 minutes. Part 2 shows how the labs work, in about 10 minutes.
 
 ## The labs
 
@@ -27,7 +27,7 @@ Each lab has one short page in `jaffle_shop/labs/`: the steps, what you see, and
 | 4 | Name every reader of the table, and put the checks in front of an AI agent. |
 | 5 | Write one check for your own work. |
 
-Work in one VS Code window: open the whole `dq-observability-labs` folder. A new terminal starts in `jaffle_shop/`. Put `uv run` in front of every command, for example `uv run dbt test`.
+Your codespace opens on the Lab 1 page. A new terminal starts in `jaffle_shop/`. Put `uv run` in front of every command, as the lab pages do.
 
 ## Words
 
