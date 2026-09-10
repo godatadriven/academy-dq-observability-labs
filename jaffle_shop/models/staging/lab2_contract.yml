@@ -1,12 +1,11 @@
-# Lab 2 · A gate on the pipe. The steps are in README.md.
-# A contract lists the columns the copy promises, with their types.
-# Blank 1: turn the contract on (true or false). Blank 2: the rule that says amount can never be empty.
+# Lab 2 · A gate on the copy: a contract. The steps: labs/lab2.md
+# The contract lists the columns that the copy promises. not_null: amount can never be empty.
 version: 2
 models:
   - name: stg_pos_events
     config:
       contract:
-        enforced: ___
+        enforced: false
     columns:
       - name: payment_id
         data_type: integer
@@ -19,7 +18,7 @@ models:
       - name: amount
         data_type: integer
         constraints:
-          - type: ______
+          - type: not_null
       - name: paid_at
         data_type: timestamp
       - name: _etl_loaded_at

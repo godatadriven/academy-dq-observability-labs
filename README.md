@@ -13,21 +13,21 @@ payment app ──► stg_pos_events ──► stg_pos_payments ──► revenu
 
 ## Before the day
 
-Follow `exercises/setup-guide.md`. It takes about 30 minutes.
+Follow `setup-guide.md`. Part 1 opens the labs in GitHub Codespaces, VS Code in your browser, in about 10 minutes. Part 2 shows how the labs work, in about 10 minutes.
 
 ## The labs
 
-Do them in this order. Each folder has a `README.md` with the steps.
+Each lab has one short page in `jaffle_shop/labs/`: the steps, what you see, and the questions. The lab files are complete. You run them, read the result, and change one value.
 
-| Lab | Folder | You will |
-| --- | --- | --- |
-| 1 | `exercises/lab1_dbt_tests/` | Write one dbt test for each of Module 1's six defects. |
-| 2 | `exercises/lab2_contracts/` | Stop the copy when the amount is missing. |
-| 3 | `exercises/lab3_soda/` | Write Soda checks, and catch the Frozen Payments. |
-| 4 | `exercises/lab4_lineage/` | Name every reader of the table, and put your checks in front of an AI agent. |
-| 5 | `exercises/lab5_planning/` | Write one check for your own work. |
+| Lab | You will |
+| --- | --- |
+| 1 | See Module 1's six defects caught by six dbt tests. |
+| 2 | Switch on a contract that stops the copy when the amount is missing. |
+| 3 | Scan three mornings with Soda, and see the Frozen Payments caught. |
+| 4 | Name every reader of the table, and put the checks in front of an AI agent. |
+| 5 | Write one check for your own work. |
 
-Work in one VS Code window: open the whole `dq-observability-labs` folder. Put the lab's README preview on one side (right-click the file > **Open Preview**), the file you fill on the other, and the terminal below. A new terminal starts in `jaffle_shop/`. Run `source .venv/bin/activate` in it once (Windows: `.venv\Scripts\activate`). Do not move the folders. Some commands use `../exercises/`.
+Your codespace opens on the Lab 1 page. A new terminal starts in `jaffle_shop/`. Put `uv run` in front of every command, as the lab pages do.
 
 ## Words
 

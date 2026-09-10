@@ -3,10 +3,11 @@
 # Claude Code, with one job (reorder_agent_prompt.md) and two commands (agent_tools.py).
 # It runs on the trainer's Claude subscription. No API key.
 #
-# From jaffle_shop/, with the sandbox activated (source .venv/bin/activate):
+# From jaffle_shop/:
 #   ./reorder_agent.sh 2026-06-02
 # The room watches each command it runs. /exit ends the session.
 cd "$(dirname "$0")"
+source .venv/bin/activate   # the agent's commands need the sandbox's Python
 DAY="${1:-2026-06-02}"
 claude \
   --model opus \

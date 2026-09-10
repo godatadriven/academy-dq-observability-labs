@@ -1,0 +1,18 @@
+# Lab 4 · The readers of the payments table, outside dbt. The steps: labs/lab4.md
+# An exposure tells dbt who reads a table from outside dbt, and who owns that reader.
+version: 2
+exposures:
+  - name: revenue_dashboard
+    type: dashboard
+    owner: {name: Sam}
+    depends_on: [ref('revenue_daily')]
+
+  - name: finance_close
+    type: analysis
+    owner: {name: Sam}
+    depends_on: [ref('revenue_daily')]
+
+  - name: ingredient_reorder_agent
+    type: application
+    owner: {name: nobody}
+    depends_on: [ref('stg_pos_payments')]

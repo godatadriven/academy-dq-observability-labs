@@ -1,0 +1,21 @@
+# Lab 3, Part A · Three Soda checks on the payments table. The steps: labs/lab3.md
+# Each check line says what must be true. The check fails when it is not.
+# ${NOW} is the morning of the scan. You set it in the command with -v NOW="...".
+
+checks for stg_pos_payments:
+  # FRESHNESS · Did the copy run last night? It runs at 03:30.
+  - freshness(_etl_loaded_at) < 1d:
+      name: "freshness: the copy ran last night"
+      filter: _etl_loaded_at <= '${NOW}'::timestamp
+
+  # VOLUME · Did a normal night of payments arrive? About 600.
+  - row_count between 500 and 700:
+      name: "volume: last night's payments arrived"
+      filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
+
+  # VALIDITY · Is every amount a real price? In cents: the cheapest item is 280, the biggest order about 5,340.
+  - invalid_count(amount) = 0:
+      name: "validity: every amount is in the menu's range"
+      valid min: 280
+      valid max: 6000
+      filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date

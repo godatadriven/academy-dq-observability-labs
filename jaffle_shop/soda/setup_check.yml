@@ -1,0 +1,6 @@
+# The setup check. It tells you that Soda can read the sandbox.
+# Your Lab 3 checks are in soda/lab3_checks.yml.
+
+checks for stg_pos_payments:
+  - row_count > 0:
+      name: "setup: the payments table has rows"

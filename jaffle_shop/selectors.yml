@@ -1,0 +1,15 @@
+selectors:
+  - name: default
+    description: Everything, except the Lab 1 tests. They fail on purpose.
+    default: true
+    definition:
+      union:
+        - method: fqn
+          value: "*"
+        - exclude:
+            - intersection:
+                - method: resource_type
+                  value: test
+                - method: fqn
+                  value: orders_daily_extract
+                  children: true
