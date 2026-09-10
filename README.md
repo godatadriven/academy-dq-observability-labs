@@ -13,20 +13,21 @@ payment app ──► stg_pos_events ──► stg_pos_payments ──► revenu
 
 ## Before the day
 
-Follow `setup-guide.md`: open the labs in GitHub Codespaces, VS Code in your browser, in about 10 minutes. `basics.md` is an optional five-minute read.
+1. Follow `setup-guide.md`: open the labs in GitHub Codespaces, VS Code in your browser, in about 10 minutes.
+2. Read `basics.md`: the terminal, a YAML file, and a query, in about 10 minutes.
 
 ## The labs
 
-Each lab has one short page in `jaffle_shop/labs/`: run the files, then do one task of your own. `uv run tools/check.py 1` (and so on) shows a ✓ for each part you got right.
+Each lab has one short page in `jaffle_shop/labs/`: read the file, run it, then do two tasks of your own. An Extra task is there for when you finish early. `uv run tools/check.py 1` (and so on) shows a ✓ for each part you got right, and says what is wrong for each ✗.
 
 | Lab | You will |
 | --- | --- |
-| 1 | See Module 1's six defects caught by dbt tests, then write a test of your own. |
-| 2 | Switch on a contract that stops the copy, and add a rule to it. |
-| 3 | Write a Soda check, and set the limit that catches the Frozen Payments. |
+| 1 | See Module 1's six defects caught by dbt tests, then write a package test and a query test. |
+| 2 | Switch on a contract that stops the copy, and add two rules to it. |
+| 3 | Write two Soda checks, and set the limit that catches the Frozen Payments. |
 | 4 | Name every reader of the table, and put your checks in front of an AI agent. |
-| 5 | Write one check for your own work. |
-| 6 | Define revenue once, in a semantic layer, and add two metrics. |
+| 5 | Define revenue once, in a semantic layer, and add two metrics. |
+| 6 | Write one check from your own standard, and run it in the sandbox. |
 
 Your codespace opens on the Lab 1 page. A new terminal starts in `jaffle_shop/`. Put `uv run` in front of every command, as the lab pages do.
 

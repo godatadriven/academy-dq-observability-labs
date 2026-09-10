@@ -15,10 +15,10 @@ The last line is `Ready. Module 1's four tests pass, and Soda can read the table
 | Name | What |
 | --- | --- |
 | `labs/` | One short page per lab. Start here. |
-| `models/` | The SQL files dbt builds, and the YAML for Labs 2, 4, and 6. |
+| `models/` | The SQL files dbt builds, and the YAML for Labs 2, 4, and 5. |
 | `seeds/` | The CSV files dbt loads, and Lab 1's tests. |
-| `soda/` | The Soda connection, the setup check, and Lab 3's checks. |
-| `tests/` | Lab 1's query test. |
+| `soda/` | The Soda connection, the setup check, Lab 3's checks, and `my_check.yml` for Lab 6. |
+| `tests/` | Lab 1's query tests, and `my_check.sql` for Lab 6. |
 | `tools/` | What runs the labs: `build.py`, `check.py`, the reorder agent (`agent_tools.py`, `reorder_agent.sh`), and `generate_feed.py`, which made the data. You open it only in Lab 4. |
 
 The tables:
@@ -30,7 +30,7 @@ The tables:
 | `revenue_daily` | What the revenue dashboard and the finance close read. |
 | `payments_repeat_rate` | Per day: how many payments equal the customer's previous one. |
 
-VS Code hides the files that dbt and uv make or need, like `target/` and `profiles.yml`. They are still there. `selectors.yml` makes a plain `dbt test` skip Lab 1's tests, which fail on purpose.
+VS Code hides the files that dbt and uv make or need, like `target/` and `profiles.yml`. They are still there. `selectors.yml` makes a plain `dbt test` skip the lab tests: Lab 1's fail on purpose, and the ones you write may not be ready yet.
 
 ## NOW, the morning you scan
 

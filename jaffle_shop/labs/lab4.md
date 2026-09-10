@@ -8,7 +8,7 @@
 
 ### 1 · Read the file
 
-Open [`models/lab4_exposures.yml`](../models/lab4_exposures.yml). An exposure tells dbt who reads a table from outside dbt. Here is the first:
+Open [`models/lab4_exposures.yml`](../models/lab4_exposures.yml). An exposure tells dbt about a reader outside dbt: a dashboard, a report, an agent. Here is the first:
 
 ```yaml
 exposures:
@@ -22,22 +22,28 @@ exposures:
 | --- | --- |
 | `- name: revenue_dashboard` | The reader. |
 | `type: dashboard` | What kind of reader it is. |
-| `owner: {name: Sam}` | The person who answers for it: Sam. |
-| `depends_on: [ref('revenue_daily')]` | The table it reads. |
+| `owner: {name: Sam}` | The person who answers for it: Sam, in finance. |
+| `depends_on: [ref('revenue_daily')]` | The table it reads. `ref('...')` is how dbt names a table. |
 
 ### 2 · List the readers
 
 ```bash
-uv run dbt ls --select stg_pos_payments+
+uv run dbt ls --select stg_pos_payments+ --resource-type exposure
 ```
+
+`stg_pos_payments+` means: the payments table, and everything that reads from it.
 
 **You see:** three lines that start with `exposure:`.
 
 ### 3 · Your turn
 
-1. The agent's owner is `nobody`. Change it to a person's name.
-2. Add a fourth reader: the weekly email to the café managers. Copy the `revenue_dashboard` block. Change the name to `weekly_cafe_email`, the type to `application`, and the owner to a person.
-3. Save, and check. **Hint:** dbt's page on [exposures](https://docs.getdbt.com/docs/build/exposures) lists every field.
+**Task A.** The agent's owner is `nobody`. Give it a person as owner.
+
+**Task B.** Add a fourth reader: the weekly email to the café managers. It reads `revenue_daily`, and a person owns it. Add it at the end of the file, after an empty line.
+
+**Hint:** dbt's page on [exposures](https://docs.getdbt.com/docs/build/exposures) lists every field. For the type, an email is an `application`.
+
+### 4 · Check
 
 ```bash
 uv run tools/check.py 4a
@@ -45,28 +51,34 @@ uv run tools/check.py 4a
 
 **You see:** `4 of 4 done. Well done.`
 
+**Extra.** The weekly email also shows the bank deposits. Make it read `revenue_daily` and `bank_deposits`.
+
 **Stop here.** Your trainer shows the agent first.
 
 ## Part B · Checks in front of the agent
 
-### 4 · Read 2 June
+### 5 · Read the agent's numbers
+
+The reorder agent orders tomorrow's ingredients from yesterday's takings: the money the cafés took. This is what it reads on the morning of 2 June:
 
 ```bash
 uv run python tools/agent_tools.py read 2026-06-02
 ```
 
-**You see:** `EUR 4,012.80`. The agent orders from this frozen number.
+**You see:** `EUR 4,012.80`. It looks normal, but it is built from frozen amounts. The agent orders from it.
 
-### 5 · Your turn
+### 6 · Your turn
 
-Open [`tools/agent_tools.py`](../tools/agent_tools.py). Change `GATE = False` to `GATE = True`. Save, and check:
+Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the gate: `GATE = False`. When the gate is `True`, the agent first runs your Lab 3 checks for that morning. If a check fails, the agent gets HOLD instead of the takings.
+
+**Task.** Switch the gate on, and save.
+
+### 7 · Check
 
 ```bash
 uv run tools/check.py 4b
 ```
 
-**You see:** `3 of 3 done. Well done.` Now the agent gets HOLD on 2 June.
+**You see:** `3 of 3 done. Well done.` The agent gets HOLD on 2 June, and the takings on 31 May.
 
-**Talk:** why a person's name as owner, and not "the team"?
-
-**Stuck?** "31 May: ✗": your Lab 3 limit is too tight. Fix it in Lab 3 first.
+**Stuck?** "31 May: ✗": one of your Lab 3 checks fails on a normal day. Your Lab 3 limit is too tight.

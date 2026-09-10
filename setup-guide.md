@@ -18,11 +18,10 @@ The labs run in **GitHub Codespaces**: VS Code in your browser, with everything 
    Ready. Module 1's four tests pass, and Soda can read the tables.
    ```
 
-4. Reply to the setup email with two lines: the `Ready` line, and whether you have used a terminal before (yes or no).
+4. Read `basics.md`, in about 10 minutes: the terminal, a YAML file, and a query.
+5. Reply to the setup email with two lines: the `Ready` line, and whether you have used a terminal before (yes or no).
 
 On the day, open <https://github.com/codespaces> and click your codespace. It keeps your work.
-
-Want a head start? Read `basics.md`, five minutes.
 
 ## If it does not work
 

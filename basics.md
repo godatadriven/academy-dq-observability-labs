@@ -1,6 +1,6 @@
-# The basics · optional
+# The basics
 
-Five minutes, before the day. The slides cover it too. Nobody expects you to know any of it.
+Ten minutes, before the day. Read it once, after the setup. The labs expect that you know these three things.
 
 ## The terminal
 

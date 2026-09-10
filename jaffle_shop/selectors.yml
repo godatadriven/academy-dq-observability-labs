@@ -1,6 +1,6 @@
 selectors:
   - name: default
-    description: Everything, except the Lab 1 tests. They fail on purpose.
+    description: Everything, except the lab tests. Lab 1's fail on purpose, and the empty ones have no query yet.
     default: true
     definition:
       union:
@@ -13,3 +13,9 @@ selectors:
                 - method: fqn
                   value: orders_daily_extract
                   children: true
+            - method: path
+              value: tests/lab1_loaded_before_placed.sql
+            - method: path
+              value: tests/lab1_one_email_one_customer.sql
+            - method: path
+              value: tests/my_check.sql

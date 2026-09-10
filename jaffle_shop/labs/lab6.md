@@ -1,63 +1,33 @@
-# Lab 6 · One definition of revenue
+# Lab 6 · The one check you ship
 
-**12 minutes** · Define revenue once, and ask the semantic layer.
+**12 minutes** · Write one check from your own standard, and run it in the sandbox.
 
 > This page stays on the left. Click a file name to open it on the right.
 
-### 1 · Read the file
+### 1 · Pick your standard
 
-Open [`models/lab6_semantic.yml`](../models/lab6_semantic.yml). It has two parts. Here are the lines that matter:
+In Module 1 you wrote a standard for your own incident: a number, a name, and a mechanism. No standard with you? Take one from the table at the bottom of this page.
 
-```yaml
-    measures:
-      - name: amount_eur
-        agg: sum
-        expr: amount / 100.0
+Your check runs in the sandbox, on one of its tables. Pick the table that is closest to your own data.
 
-metrics:
-  - name: revenue
-    type: simple
-    type_params:
-      measure: amount_eur
-```
+### 2 · Pick the kind of check
 
-| Line | What it means |
-| --- | --- |
-| `measures:` | Numbers the semantic layer can add up, from the payments table. |
-| `- name: amount_eur` | One measure: the amount of each payment, in euros. |
-| `agg: sum` / `expr: amount / 100.0` | How: add up `amount`, divided by 100, because amounts are in cents. |
-| `- name: revenue` | The metric: the name every reader asks for. |
-| `type: simple` / `measure: amount_eur` | A simple metric is one measure. Here, revenue is the sum of the amounts. |
+You know three kinds now:
 
-### 2 · Ask for revenue
+| Kind | Use it when | The file |
+| --- | --- | --- |
+| A dbt test | A rule about every row, checked when dbt builds. A query test can compare two tables. | [`tests/my_check.sql`](../tests/my_check.sql) |
+| A Soda check | How the table looks today: fresh, full, normal. It runs on its own schedule. | [`soda/my_check.yml`](../soda/my_check.yml) |
+| A contract | A promise about the columns, checked before a change lands. | Lab 2's file, `models/staging/lab2_contract.yml` |
 
-```bash
-uv run mf query --metrics revenue --group-by metric_time__day --start-time 2026-05-31 --end-time 2026-06-02
-```
-
-**You see:** three days. 1 June is `4012.8`.
+For this lab, write a query test or a Soda check. Both files are ready, with only comments in them.
 
 ### 3 · Your turn
 
-Add two metrics under `revenue`:
+1. Open [`labs/my_check.md`](my_check.md), and write each answer after its line.
+2. Write your check in `tests/my_check.sql` or in `soda/my_check.yml`. Look at the Lab 1 and Lab 3 files for the shape.
 
-1. `payments`: the number of payments. Copy the `revenue` block. Change the name, the label, and the measure to `payment_count`.
-2. `average_payment`: revenue divided by payments. Add these lines:
-
-```yaml
-  - name: average_payment
-    label: Average payment
-    type: ratio
-    type_params:
-      numerator: revenue
-      denominator: payments
-```
-
-3. Save. Then let dbt read the file. **Hint:** dbt's pages on [simple metrics](https://docs.getdbt.com/docs/build/simple) and [ratio metrics](https://docs.getdbt.com/docs/build/ratio).
-
-```bash
-uv run dbt parse
-```
+**Hint:** a Soda scan in `check.py` runs on the morning of 2 June. A query test runs on the whole table.
 
 ### 4 · Check
 
@@ -65,8 +35,21 @@ uv run dbt parse
 uv run tools/check.py 6
 ```
 
-**You see:** `3 of 3 done. Well done.`
+**You see:** `6 of 6 done. Well done.` The last ✓ line says if your check passes or fails. On 2 June, a good check on the payments fails.
 
-**Talk:** every reader now gets 4,012.80 for 1 June. Is it right?
+### Extra
 
-**Stuck?** An error about the file: check the spaces, and run `uv run dbt parse` again.
+Write the same standard as the other kind too: a Soda check and a query test. `check.py 6` shows it on the Extra line.
+
+## No standard? Take one of these
+
+Sanne owns the payment feed. Sam works in finance.
+
+| Standard | Owner | The table, and the shape |
+| --- | --- | --- |
+| Every day, the payments match the bank deposit within 1%. | Sam | `revenue_daily` and `bank_deposits`, a query test like `tests/lab1_updated_before_placed.sql` |
+| Ring when more than 20% of a day's payments repeat the last amount. | Sanne | `payments_repeat_rate`, a Soda check like `soda/lab3_repeat.yml` |
+| Last night's payments are in by the 09:00 scan. | Sanne | `stg_pos_payments`, like the freshness check in `soda/lab3_checks.yml` |
+| Every amount is between €2.80 and €60.00 (280 to 6000 in cents). | Sam | `stg_pos_payments`, like the validity check in `soda/lab3_checks.yml` |
+
+**Stuck?** Read the ✗ line: it says what is wrong. Fix it, save, and check again.
