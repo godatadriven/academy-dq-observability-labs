@@ -24,6 +24,6 @@ for number, (name, command, expected) in enumerate(STEPS, start=1):
     output = result.stdout + result.stderr
     if result.returncode != 0 or expected not in output:
         print(output[-2000:])
-        sys.exit(f"Step {number} failed: {' '.join(command)}. See setup-guide.md, Common problems.")
+        sys.exit(f"Step {number} failed: {' '.join(command)}. See setup-guide.md, 'If it does not work'.")
 
 print("Ready. Module 1's four tests pass, and Soda can read the tables.")

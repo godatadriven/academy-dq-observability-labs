@@ -28,8 +28,8 @@
    Then press ↑, change the date to `2026-06-01`, and run. Do the same for `2026-06-02`.
 
    You see: 31 May and 1 June are `All is good`. 2 June is `Oops! 2 failures`: validity with `check_value: 41`, and distribution with `check_value: 100.0`.
-6. Answer: why is 1 June still green? What do 41 and 100 mean?
-7. In `soda/lab3_repeat.yml`, change `repeat_rate < 20` to `repeat_rate < 5`. Save (Cmd+S). Scan `2026-05-26` with both files.
+6. Answer: why is 1 June still green? What do 41 and 100 mean? Module 1 said 99 in 100: here, every returning customer repeats.
+7. In `soda/lab3_repeat.yml`, change `repeat_rate < 20` to `repeat_rate < 5`. Save (Cmd+S, or Ctrl+S on Windows). Scan `2026-05-26` with both files.
 
    You see: the distribution check fails on a normal day, with `check_value: 9.46`. Answer: what does a limit that is too tight cost you? Then change it back to `20`.
 

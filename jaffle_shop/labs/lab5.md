@@ -28,7 +28,7 @@ Each has a number, a name, and a mechanism. Sanne is the integrations engineer w
 1. **The gate.** Any column change in the payments feed stops the copy and alerts #data-alerts within 15 minutes. Owner: Sanne. Mechanism: a contract check in the pipeline.
 2. **The repeat.** Alert #data-alerts if more than 20% of a day's payments equal the customer's previous payment. Owner: Sanne. Mechanism: a check every morning after the copy.
 3. **The load.** The payments table is loaded by 04:00, every day. Owner: Sanne. Mechanism: a freshness check at 04:00 that posts to #data-alerts.
-4. **The menu.** Every payment amount is between €2.80 and €60.00. Owner: Sam. Mechanism: a validity check on the payments table every morning.
+4. **The menu.** Every payment amount is between €2.80 and €60.00: 280 to 6000 in cents. Owner: Sam. Mechanism: a validity check on the payments table every morning.
 
 ## The templates
 

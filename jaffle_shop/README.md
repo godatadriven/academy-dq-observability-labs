@@ -8,7 +8,7 @@ dbt-labs' [jaffle_shop](https://github.com/dbt-labs/jaffle_shop_duckdb) on DuckD
 uv run build.py
 ```
 
-The last line is `Ready. Module 1's four tests pass, and Soda can read the tables.` The steps and common problems are in `../setup-guide.md`.
+The last line is `Ready. Module 1's four tests pass, and Soda can read the tables.` The steps, and what to do when it does not work, are in `../setup-guide.md`.
 
 ## What is in it
 
