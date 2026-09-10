@@ -1,6 +1,6 @@
 # Lab 1 · Six defects, six tests
 
-**Goal:** see Module 1's six defects caught by dbt tests. **Time:** 30 minutes.
+**Goal:** see Module 1's six defects caught by dbt tests. **Time:** 20 minutes.
 
 > Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
 

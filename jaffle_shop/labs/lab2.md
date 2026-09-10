@@ -1,6 +1,6 @@
 # Lab 2 · A gate on the pipe
 
-**Goal:** close the gate that the Jaffle Shop did not have. **Time:** 10 minutes.
+**Goal:** close the gate that the Jaffle Shop did not have. **Time:** 8 minutes.
 
 > Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
 

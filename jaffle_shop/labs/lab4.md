@@ -1,6 +1,6 @@
 # Lab 4 · Every reader, and checks in front of the agent
 
-**Goal:** name every reader of the payments table, and stop the agent from reading bad data. **Time:** Part A 20 minutes. Part B 14 minutes, with your trainer's two demos.
+**Goal:** name every reader of the payments table, and stop the agent from reading bad data. **Time:** Part A 12 minutes. Part B 12 minutes, with your trainer's two demos.
 
 > Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
 
@@ -15,7 +15,9 @@
 
    You see: three lines that start with `exposure:`, then the tables and tests.
 3. Answer: which reader reads the payments table itself? Who owns each reader?
-4. The reorder agent's owner is `nobody`. Write a person's name. Save (Cmd+S, or Ctrl+S on Windows). Answer: why a name, and not "the team"?
+4. The reorder agent's owner is `nobody`. Change `nobody` to a person's name, and keep the `{ }` around it. Save (Cmd+S, or Ctrl+S on Windows). Answer: why a name, and not "the team"?
+
+**Stop here.** Your trainer shows the agent first.
 
 ## Part B · Checks in front of the agent
 
