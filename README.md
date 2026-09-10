@@ -17,17 +17,17 @@ Follow `setup-guide.md`. Part 1 installs the labs, in about 45 minutes. Part 2 s
 
 ## The labs
 
-Every lab file is in `jaffle_shop/`, where dbt and Soda read it, and starts switched off. `jaffle_shop/LABS.md` lists each lab: the file to open, the command, the time, and what to do when it does not work. The steps are at the top of each lab file.
+Each lab has one short page in `jaffle_shop/labs/`: the steps, what you see, and the questions. The lab files are complete. You run them, read the result, and change one value.
 
 | Lab | You will |
 | --- | --- |
-| 1 | Write one dbt test for each of Module 1's six defects. |
-| 2 | Stop the copy when the amount is missing. |
-| 3 | Write Soda checks, and catch the Frozen Payments. |
-| 4 | Name every reader of the table, and put your checks in front of an AI agent. |
+| 1 | See Module 1's six defects caught by six dbt tests. |
+| 2 | Switch on a contract that stops the copy when the amount is missing. |
+| 3 | Scan three mornings with Soda, and see the Frozen Payments caught. |
+| 4 | Name every reader of the table, and put the checks in front of an AI agent. |
 | 5 | Write one check for your own work. |
 
-Work in one VS Code window: open the whole `dq-observability-labs` folder. A new terminal starts in `jaffle_shop/`. Run the activate line in it once: `source .venv/bin/activate`, or on Windows `.venv\Scripts\activate`.
+Work in one VS Code window: open the whole `dq-observability-labs` folder. A new terminal starts in `jaffle_shop/`. Put `uv run` in front of every command, for example `uv run dbt test`.
 
 ## Words
 

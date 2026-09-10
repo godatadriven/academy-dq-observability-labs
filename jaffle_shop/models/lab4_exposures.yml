@@ -1,48 +1,18 @@
-# LAB 4 · Part A · Every reader, named                               Time: 20 minutes
-#
-# Goal: name every reader of the payments table in dbt.
-# You learn: dbt exposures, and how dbt ls shows everything that reads a table.
-#
-# dbt knows only what is inside dbt. Three readers sit outside it: the revenue dashboard, the finance
-# close (finance's month-end report), and the reorder agent. An exposure is a short YAML entry that
-# tells dbt who reads a table from outside dbt.
-#
-# Steps
-#   1. See what dbt knows now. The + means "and everything built from it".
-#        dbt ls --select stg_pos_payments+
-#   2. Switch this file on. Select every line below the START line, then press Cmd+/ (Windows: Ctrl+/).
-#   3. Fill the five blanks.
-#   4. Run the same command again.
-#
-# When it works: three new lines appear at the top:
-#   exposure:jaffle_shop.finance_close
-#   exposure:jaffle_shop.ingredient_reorder_agent
-#   exposure:jaffle_shop.revenue_dashboard
-# Then wait for the next slide. Part B is in agent_tools.py.
-# Stuck? LABS.md, Lab 4. To start over: git checkout models/lab4_exposures.yml
-# Done early? Which lines of Module 1's good alert did you just make possible?
-#
-# ---- START: select from the next line to the end of the file, then press Cmd+/ ----
-# # Types: dashboard (charts), notebook, analysis (a report process), ml (a machine-learning model), application (a program that acts).
-# version: 2
-# exposures:
-#   - name: revenue_dashboard
-#     type: dashboard
-#     # Module 1: Sam in finance owns the definition of revenue.
-#     owner: {name: Sam}
-#     # The table the dashboard reads: see the diagram in the root README.
-#     depends_on: [ref('______')]
-#
-#   - name: finance_close
-#     # Pick the closest type from the list at the top.
-#     type: ______
-#     owner: {name: Sam}
-#     depends_on: [ref('revenue_daily')]
-#
-#   - name: ingredient_reorder_agent
-#     # Pick the closest type from the list at the top.
-#     type: ______
-#     # One person's name, not a team. Yours is fine.
-#     owner: {name: ______}
-#     # It reads the payments table itself. See agent_tools.py.
-#     depends_on: [ref('______')]
+# Lab 4 · The readers of the payments table, outside dbt. The steps: labs/lab4.md
+# An exposure tells dbt who reads a table from outside dbt, and who owns that reader.
+version: 2
+exposures:
+  - name: revenue_dashboard
+    type: dashboard
+    owner: {name: Sam}
+    depends_on: [ref('revenue_daily')]
+
+  - name: finance_close
+    type: analysis
+    owner: {name: Sam}
+    depends_on: [ref('revenue_daily')]
+
+  - name: ingredient_reorder_agent
+    type: application
+    owner: {name: nobody}
+    depends_on: [ref('stg_pos_payments')]

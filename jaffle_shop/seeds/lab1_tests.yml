@@ -1,0 +1,34 @@
+# Lab 1 · Module 1's six defects, as six dbt tests. The steps: labs/lab1.md
+version: 2
+seeds:
+  - name: orders_daily_extract
+    data_tests:
+      # UNIQUENESS · C-1042 is in twice. Rule: no two rows share customer, total, and email.
+      - dbt_expectations.expect_compound_columns_to_be_unique:
+          arguments:
+            column_list: ["customer_id", "order_total", "email"]
+    columns:
+      - name: email
+        data_tests:
+          # COMPLETENESS · an email is missing. Rule: email is not empty.
+          - not_null
+          # VALIDITY · "(at)" is not an email address. Rule: some text, @, some text, a dot, some text.
+          - dbt_expectations.expect_column_values_to_match_regex:
+              arguments:
+                regex: ".+@.+\\..+"
+      - name: order_total
+        data_tests:
+          # ACCURACY · a total below zero. Rule: order_total is 0 or more.
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+      - name: _loaded_at
+        data_tests:
+          # TIMELINESS · loaded on 2 July, today is 11 July. Rule: loaded within 1 day of now.
+          - dbt_expectations.expect_row_values_to_have_recent_data:
+              arguments:
+                datepart: day
+                interval: 1
+
+# CONSISTENCY · an order placed in 2027 and updated in 2026. No test above fits.
+# It is a query: tests/lab1_updated_before_placed.sql

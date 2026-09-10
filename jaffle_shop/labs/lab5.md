@@ -1,10 +1,6 @@
 # Lab 5 · The one check you ship
 
-**Time:** 12 minutes.
-
-**Goal:** write one check for your own work, with a number and a person's name, ready to use on Monday.
-
-**You learn:** how to turn a standard into a check that runs by itself.
+**Goal:** write one check for your own work, with a number and a person's name, ready to use on Monday. **Time:** 12 minutes.
 
 In Module 1 you wrote a **standard** for your own data incident: a number, a name, and a mechanism. A **mechanism** is something that runs by itself, like a test, a check, or a contract. Find your standard on the Miro board, in "Your incidents". No standard? Take one below.
 
@@ -57,7 +53,7 @@ models:
           - ______
 ```
 
-The first blank is the table, the second the column, and the third the test with its settings. `seeds/lab1_extract_tests.yml` has examples of each. For a seed, like Lab 1's table, write `seeds:` instead of `models:`.
+The first blank is the table, the second the column, and the third the test with its settings. `seeds/lab1_tests.yml` has examples of each. For a seed, like Lab 1's table, write `seeds:` instead of `models:`.
 
 A Soda check, like Lab 3:
 

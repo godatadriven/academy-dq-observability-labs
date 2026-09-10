@@ -4,33 +4,11 @@ dbt-labs' [jaffle_shop](https://github.com/dbt-labs/jaffle_shop_duckdb) on DuckD
 
 ## Build
 
-The steps are in `../setup-guide.md`, Step 4. Run one command at a time. On Windows, use `.venv\Scripts\activate` instead of `source .venv/bin/activate`. Every new terminal needs the activate line once.
-
 ```bash
-uv sync
+uv run build.py
 ```
 
-```bash
-source .venv/bin/activate
-```
-
-```bash
-dbt deps
-```
-
-```bash
-dbt seed
-```
-
-```bash
-dbt run
-```
-
-```bash
-dbt test
-```
-
-The last line of `dbt test` starts with `Done. PASS=4`.
+The last line is `Ready. Module 1's four tests pass, and Soda can read the tables.` The steps and common problems are in `../setup-guide.md`.
 
 ## What is in it
 
@@ -43,14 +21,16 @@ The last line of `dbt test` starts with `Done. PASS=4`.
 | `agent_tools.py` | The reorder agent's two commands: `read` and `order`. Lab 4 switches on its gate. |
 | `reorder_agent.sh` | The reorder agent. Your trainer runs it on the day. |
 | `soda/` | The Soda connection, the setup check, and Lab 3's checks. |
-| `LABS.md` | The labs: the file to open for each lab, the command, and what to do when it does not work. |
+| `build.py` | Builds the sandbox in one go: `uv run build.py`. |
+| `labs/` | One short page per lab. |
+| `selectors.yml` | Makes a plain `dbt test` skip Lab 1's tests, which fail on purpose. |
 
 ## NOW, the morning you scan
 
 The sandbox holds 17 May to 17 June 2026. A Soda scan pretends to run at 09:00 on the morning you pass as `NOW`. This scan runs the setup check:
 
 ```bash
-soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" soda/setup_check.yml
+uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" soda/setup_check.yml
 ```
 
-Lab 3 uses the same command with `soda/lab3_checks.yml`.
+Lab 3 uses the same command with `soda/lab3_checks.yml` and `soda/lab3_repeat.yml`.

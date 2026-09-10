@@ -1,71 +1,21 @@
-# LAB 3 · Checks on the payments table                   Time: Part A 25 minutes, Part B 15 minutes
-#
-# Goal: write checks that pass on a normal morning. Then write a check that catches the Frozen Payments.
-# You learn: Soda checks for freshness, volume, validity, and a check with your own SQL query.
-#
-# A Soda check is a rule about a table. A scan runs your checks and says PASSED or FAILED for each one.
-# Each check line says what must be true. The check fails when it is not. So "ring above 20" is written < 20.
-# Soda reads this file where it is. There is nothing to switch on.
-#
-# Pick the morning: the data covers 17 May to 17 June 2026, one load per night. NOW is the time that
-# the scan pretends it is. A scan at 09:00 looks at the payments of the day before. Every scan in this
-# lab is this command. -v NOW=... sets NOW, and the checks below use it as ${NOW}.
-# Change only the date: press the up arrow to get the last command back.
-#   soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" soda/lab3_checks.yml
-#
-# Part A · a normal morning, 31 May
-#   1. Look at the data first. How many payments arrive each day?
-#        dbt show --inline "select paid_at::date as day, count(*) from {{ ref('stg_pos_payments') }} group by 1 order by 1" --limit 40
-#      It prints one row per day: the day, and how many payments arrived.
-#   2. Fill the five blanks below: freshness, volume, and the lowest and highest amount.
-#   3. Scan 31 May. Go on when all three checks pass. Do not scan 2 June yet.
-#   When it works: three lines say [PASSED]. The last line is  All is good. No failures. No warnings. No errors.
-#   Done early? Find Anna, customer 20, on 1 June. What does her event say, and what does the payments table say?
-#        dbt show --inline "select json_extract_string(event, '/amount') as amount, json_extract_string(event, '/amount_cents') as amount_cents from {{ ref('raw_pos_payments') }} where customer_id = 20 and paid_at::date = '2026-06-01'"
-#        dbt show --inline "select amount from {{ ref('stg_pos_payments') }} where customer_id = 20 and paid_at::date = '2026-06-01'"
-#
-# Part B · catch the case
-#   Module 1's example rule: alert when more than 20 in 100 payments (20%) equal the customer's last payment.
-#   A normal day has about 6 in 100. The table payments_repeat_rate is ready for you: for each day, the
-#   percent (0 to 100) of payments that equal the customer's last one, in the column repeat_rate_pct.
-#   1. Switch on the last five lines of this file: select them, then press Cmd+/ (Windows: Ctrl+/).
-#   2. Fill the threshold.
-#   3. Scan 31 May, then 1 June, then 2 June.
-#   When it works: 31 May and 1 June pass. The scan on 1 June looks at 31 May's payments, which were still right.
-#   2 June fails twice. The repeat check shows check_value: 100.0: every returning customer paid exactly
-#   their last amount. The validity check shows check_value: 41: 41 new customers had no last payment, so they got 0.
-#   Done early? Scan Monday 15 June. Which checks ring, and which one is the busy Sunday?
-#
-# Stuck? LABS.md, Lab 3. To start over: git checkout soda/lab3_checks.yml
+# Lab 3, Part A · Three Soda checks on the payments table. The steps: labs/lab3.md
+# Each check line says what must be true. The check fails when it is not.
+# ${NOW} is the morning of the scan. You set it in the command with -v NOW="...".
 
 checks for stg_pos_payments:
-
-  # FRESHNESS · Did the data arrive on time?
-  # The copy runs at 03:30. At 09:00 the newest load is a few hours old.
-  # Write a duration, like 6h or 1d.
-  - freshness(_etl_loaded_at) < ___:
+  # FRESHNESS · Did the copy run last night? It runs at 03:30.
+  - freshness(_etl_loaded_at) < 1d:
       name: "freshness: the copy ran last night"
       filter: _etl_loaded_at <= '${NOW}'::timestamp
 
-  # VOLUME · Did all of it arrive? About 600 payments a night. Count a few nights first, with step 1.
-  - row_count between ___ and ___:
+  # VOLUME · Did a normal night of payments arrive? About 600.
+  - row_count between 500 and 700:
       name: "volume: last night's payments arrived"
       filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
 
-  # VALIDITY · Is every amount a real price?
-  # Amounts are in cents: EUR 1.00 is 100. The cheapest item costs EUR 2.80.
-  # Prices went up on 1 June. The biggest correct order is then about EUR 53.
+  # VALIDITY · Is every amount a real price? In cents: the cheapest item is 280, the biggest order about 5,340.
   - invalid_count(amount) = 0:
       name: "validity: every amount is in the menu's range"
-      valid min: ___
-      valid max: ___
+      valid min: 280
+      valid max: 6000
       filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
-
-# Part B · Alert when more than 20 in 100 payments (20%) equal the customer's last payment. A normal day has about 6.
-# Select the five lines below and press Cmd+/ (Windows: Ctrl+/). Then fill the threshold, a number.
-
-# checks for payments_repeat_rate:
-#   - repeat_rate < ___:
-#       repeat_rate query: |
-#         select repeat_rate_pct from payments_repeat_rate where pay_date = cast('${NOW}' as date) - 1
-#       name: "distribution: payments do not repeat the customer's last amount"

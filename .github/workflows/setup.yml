@@ -20,28 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      - name: uv sync
-        run: uv sync
-      - name: Activate, Mac and Linux
-        if: runner.os != 'Windows'
+      - name: Build the sandbox, as in the setup guide
+        run: uv run build.py
+      - name: Lab 1 tests fail on purpose, six of them
         shell: bash
-        run: source .venv/bin/activate && dbt --version
-      - name: Activate, Windows
-        if: runner.os == 'Windows'
-        shell: pwsh
         run: |
-          Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force
-          .venv\Scripts\activate
-          dbt --version
-      - name: dbt deps
-        run: uv run dbt deps
-      - name: dbt seed
-        run: uv run dbt seed
-      - name: dbt run
-        run: uv run dbt run
-      - name: dbt test, with every lab file switched off
-        run: uv run dbt test
-      - name: Soda setup check
-        run: uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" soda/setup_check.yml
+          uv run dbt test --select orders_daily_extract > lab1.txt || true
+          grep "ERROR=6" lab1.txt
       - name: The agent's read command
         run: uv run python agent_tools.py read 2026-05-31
