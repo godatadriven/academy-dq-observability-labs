@@ -71,7 +71,7 @@ Change it back to `enforced: false`, and save. The next labs need the Frozen Pay
 uv run dbt run
 ```
 
-**You see:** `ERROR=0`.
+**You see:** `ERROR=0`. If you run `check.py 2` again now, it shows ✗ on "the contract is on". That is correct: it is off again.
 
 ### Extra
 

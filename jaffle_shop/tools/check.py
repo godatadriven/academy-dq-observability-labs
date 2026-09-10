@@ -58,9 +58,9 @@ def has_code(path: str, comment: str) -> bool:
 
 
 def dbt_results(out: str) -> dict[str, str]:
-    """Test name -> PASS, FAIL, or ERROR, from the output of dbt test."""
+    """Test name -> "PASS", "FAIL 3" (with the number of bad rows), or "ERROR", from dbt test."""
     found = re.findall(r"\d+ of \d+ (PASS|FAIL \d+|ERROR|WARN \d+) (\S+)", out)
-    return {name: status.split()[0] for status, name in found}
+    return {name: status for status, name in found}
 
 
 def person(name) -> bool:
@@ -79,24 +79,29 @@ def lab1() -> list[bool]:
     six = {"email is not empty": "not_null_orders_daily_extract_email", "email looks like an email": "match_regex",
            "order_total is 0 or more": "order_total__0", "no row is in twice": "compound_columns",
            "loaded within 1 day": "recent_data", "not updated before it is placed": "lab1_updated_before_placed"}
-    missing = [rule for rule, part in six.items() if status(part) != "FAIL"]
+    missing = [rule for rule, part in six.items() if not status(part).startswith("FAIL")]
     above = [s for name, s in results.items() if "be_between" in name and "order_total" in name and "1000" in name]
+    email_sql = Path("tests/lab1_one_email_one_customer.sql")
+    email_sql = email_sql.read_text().lower() if email_sql.exists() else ""
+    groups = "email" in email_sql and "customer_id" in email_sql and ("having" in email_sql or "count" in email_sql)
     mine = status("lab1_loaded_before_placed")
     email = status("lab1_one_email_one_customer")
 
-    extra(email == "PASS", "tests/lab1_one_email_one_customer.sql runs, and passes",
-          {"": "The file has no query yet.", "ERROR": "The query does not run.",
-           "FAIL": "The query returns rows, but no email belongs to two customers."}.get(email, ""))
+    extra(email == "PASS" and groups, "tests/lab1_one_email_one_customer.sql runs, and passes",
+          "The file has no query yet." if not email else "The query does not run." if email == "ERROR"
+          else "The query returns rows, but no email belongs to two customers." if email.startswith("FAIL")
+          else "The query does not count the customers of each email.")
     return [
         show(not missing, "Module 1's six defects: six tests fail",
              f"Gone, or not failing now: {', '.join(missing)}."),
-        show("FAIL" in above, "Task A: a test that no order is above 1,000, failing on C-1045",
+        show(any(a.startswith("FAIL") for a in above), "Task A: a test that no order is above 1,000, failing on C-1045",
              "There is no failing test with max_value 1000 on order_total yet." if not above
              else "Your test with 1000 does not fail."),
-        show(mine == "FAIL", "Task B: your query test finds the order loaded before it was placed",
-             {"": "tests/lab1_loaded_before_placed.sql has no query yet, or does not read orders_daily_extract.",
-              "ERROR": "tests/lab1_loaded_before_placed.sql does not run: dbt shows an error for it.",
-              "PASS": "tests/lab1_loaded_before_placed.sql runs, but returns no row."}.get(mine, "")),
+        show(mine == "FAIL 1", "Task B: your query test finds the one order loaded before it was placed",
+             "tests/lab1_loaded_before_placed.sql has no query yet, or does not read orders_daily_extract." if not mine
+             else "tests/lab1_loaded_before_placed.sql does not run: dbt shows an error for it." if mine == "ERROR"
+             else "tests/lab1_loaded_before_placed.sql runs, but returns no row." if mine == "PASS"
+             else f"tests/lab1_loaded_before_placed.sql returns {mine.split()[1]} rows. Only one order is loaded before it is placed."),
     ]
 
 
@@ -172,7 +177,7 @@ def lab3a() -> list[bool]:
 def lab3b() -> list[bool]:
     text = "\n".join(line for line in open("soda/lab3_repeat.yml").read().splitlines()
                      if not line.strip().startswith("#"))
-    match = re.search(r"repeat_rate\s*<\s*([0-9.]+)", text) or re.search(r"fail:\s*when\s*>=?\s*([0-9.]+)", text)
+    match = re.search(r"repeat_rate\s*<=?\s*([0-9.]+)", text) or re.search(r"fail:\s*when\s*>=?\s*([0-9.]+)", text)
     limit = float(match.group(1)) if match else None
     rates = dict(query("select pay_date::varchar, repeat_rate_pct from payments_repeat_rate "
                        "where pay_date between '2026-05-17' and '2026-06-01'"))
@@ -291,9 +296,9 @@ def own_test() -> tuple[bool, str]:
     if not has_code("tests/my_check.sql", "--"):
         return False, "tests/my_check.sql has no query yet."
     status = dbt_results(run("dbt", "test", "--select", "my_check")).get("my_check", "")
-    if status not in ("PASS", "FAIL"):
+    if status != "PASS" and not status.startswith("FAIL"):
         return False, "tests/my_check.sql does not run: dbt shows an error for it."
-    return True, f"your query test {'passes' if status == 'PASS' else 'fails'}"
+    return True, "your query test passes" if status == "PASS" else f"your query test fails on {status.split()[1]} rows"
 
 
 def lab6() -> list[bool]:

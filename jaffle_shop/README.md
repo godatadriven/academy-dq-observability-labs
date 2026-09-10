@@ -30,7 +30,7 @@ The tables:
 | `revenue_daily` | What the revenue dashboard and the finance close read. |
 | `payments_repeat_rate` | Per day: how many payments equal the customer's previous one. |
 
-VS Code hides the files that dbt and uv make or need, like `target/` and `profiles.yml`. They are still there. `selectors.yml` makes a plain `dbt test` skip the lab tests: Lab 1's fail on purpose, and the ones you write may not be ready yet.
+VS Code hides the files that dbt and uv make or need, like `target/` and `profiles.yml`. They are still there. `selectors.yml` makes a plain `dbt test` skip the lab tests: Lab 1's fail on purpose, and the ones you write are not always finished.
 
 ## NOW, the morning you scan
 

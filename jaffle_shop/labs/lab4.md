@@ -79,6 +79,6 @@ Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the gate: `GA
 uv run tools/check.py 4b
 ```
 
-**You see:** `3 of 3 done. Well done.` The agent gets HOLD on 2 June, and the takings on 31 May.
+**You see:** `3 of 3 done. Well done.` The agent gets HOLD on 2 June. On the morning of 31 May, it still gets the takings.
 
 **Stuck?** "31 May: ✗": one of your Lab 3 checks fails on a normal day. Your Lab 3 limit is too tight.

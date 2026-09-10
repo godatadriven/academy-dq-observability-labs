@@ -49,7 +49,7 @@ Add two metrics under `revenue`, where the comment says "Your turn".
 
 **Task B.** `average_payment`: revenue divided by payments.
 
-**Hint:** dbt's pages on [simple metrics](https://docs.getdbt.com/docs/build/simple) (Task A) and [ratio metrics](https://docs.getdbt.com/docs/build/ratio) (Task B). A ratio metric divides one metric by another.
+**Hint:** Task A has the same shape as `revenue`, with another measure. Our file writes a simple metric with `type_params:` and `measure:`, so copy that shape, not the one on dbt's page. Task B is a [ratio metric](https://docs.getdbt.com/docs/build/ratio): it divides one metric by another.
 
 After a change, let dbt read the file, then ask again:
 
@@ -58,7 +58,7 @@ uv run dbt parse
 uv run mf query --metrics revenue,payments,average_payment --group-by metric_time__day --start-time 2026-06-01 --end-time 2026-06-01
 ```
 
-**You see:** `4012.8`, `576`, and `6.96667`.
+**You see:** `4012.8`, `576`, and `6.96667`. A message about a new version of MetricFlow can show too. Ignore it.
 
 ### 4 · Check
 
@@ -70,6 +70,12 @@ uv run tools/check.py 5
 
 ### Extra
 
-Ask for revenue by payment method. Add `payment_method` as a dimension of the semantic model, next to `paid_at`, and group by `payment__payment_method`. **Hint:** dbt's page on [dimensions](https://docs.getdbt.com/docs/build/dimensions): a payment method is `categorical`.
+Ask for revenue by payment method. Add `payment_method` as a dimension of the semantic model, next to `paid_at`. **Hint:** dbt's page on [dimensions](https://docs.getdbt.com/docs/build/dimensions): a payment method is `categorical`. Then run `uv run dbt parse`, and ask:
+
+```bash
+uv run mf query --metrics revenue --group-by payment__payment_method --start-time 2026-06-01 --end-time 2026-06-01
+```
+
+**You see:** four payment methods. `credit_card` is `2653.5`.
 
 **Stuck?** An error about the file: the spaces at the start of a line you added do not line up. Fix them, and run `uv run dbt parse` again.

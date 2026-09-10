@@ -12,7 +12,7 @@ Your check runs in the sandbox, on one of its tables. Pick the table that is clo
 
 ### 2 · Pick the kind of check
 
-You know three kinds now:
+Three kinds of check fit a standard:
 
 | Kind | Use it when | The file |
 | --- | --- | --- |
@@ -35,11 +35,11 @@ For this lab, write a query test or a Soda check. Both files are ready, with onl
 uv run tools/check.py 6
 ```
 
-**You see:** `6 of 6 done. Well done.` The last ✓ line says if your check passes or fails. On 2 June, a good check on the payments fails.
+**You see:** `6 of 6 done. Well done.` The last ✓ line says if your check passes or fails, and on how many rows. A good check fails for a real reason: on the bad days, not on every row.
 
 ### Extra
 
-Write the same standard as the other kind too: a Soda check and a query test. `check.py 6` shows it on the Extra line.
+Write the same standard as the other kind too: a Soda check and a query test. `check.py 6` shows it on the Extra line. To compare two tables in Soda, copy the query shape of `soda/lab3_repeat.yml`, with `${NOW}`.
 
 ## No standard? Take one of these
 
@@ -47,7 +47,7 @@ Sanne owns the payment feed. Sam works in finance.
 
 | Standard | Owner | The table, and the shape |
 | --- | --- | --- |
-| Every day, the payments match the bank deposit within 1%. | Sam | `revenue_daily` and `bank_deposits`, a query test like `tests/lab1_updated_before_placed.sql` |
+| Every day, the payments match the bank deposit within 1%. | Sam | A query test like `tests/lab1_updated_before_placed.sql`. `revenue_daily` has one row per café per day: add up `revenue_eur` by `pay_date` first. `bank_deposits` has `deposit_date` and `amount_eur`. |
 | Ring when more than 20% of a day's payments repeat the last amount. | Sanne | `payments_repeat_rate`, a Soda check like `soda/lab3_repeat.yml` |
 | Last night's payments are in by the 09:00 scan. | Sanne | `stg_pos_payments`, like the freshness check in `soda/lab3_checks.yml` |
 | Every amount is between €2.80 and €60.00 (280 to 6000 in cents). | Sam | `stg_pos_payments`, like the validity check in `soda/lab3_checks.yml` |
