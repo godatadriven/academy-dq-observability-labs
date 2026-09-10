@@ -29,11 +29,24 @@
 
    You see: `Yesterday's takings: EUR 4,012.80`. That is the frozen number that the agent orders from.
 6. Open [`agent_tools.py`](../agent_tools.py). Change `GATE = False` to `GATE = True`. Save.
-7. Run step 5 again, and once for `2026-05-31`.
+7. Run both mornings again:
+
+   ```bash
+   uv run python agent_tools.py read 2026-05-31
+   ```
+
+   ```bash
+   uv run python agent_tools.py read 2026-06-02
+   ```
+
 
    You see: 31 May gives the takings, `EUR 5,481.40`. 2 June gives `HOLD: 2 checks failed`.
 8. Answer: what runs now before the agent reads?
 
-**Done early?** Run it for `2026-06-15`. How many checks fail? Is holding the order right?
+**Done early?** Run it for 15 June. How many checks fail? Is holding the order right?
+
+```bash
+uv run python agent_tools.py read 2026-06-15
+```
 
 **Stuck?** No `HOLD` on 2 June: save `agent_tools.py`, and check that `GATE = True`.

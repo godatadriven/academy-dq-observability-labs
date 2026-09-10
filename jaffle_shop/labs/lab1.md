@@ -3,6 +3,8 @@
 **Goal:** see Module 1's six defects caught by dbt tests. **Time:** 20 minutes.
 
 > Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
+>
+> To run a command: hover over the grey box, click the copy icon, click in the terminal, paste, and press Enter.
 
 1. Open [`seeds/lab1_tests.yml`](../seeds/lab1_tests.yml). Each comment names one defect from Module 1's "Spot the defects". The table is a seed: a CSV file that dbt loads. So the file starts with `seeds:`, not `models:`.
 2. Run:

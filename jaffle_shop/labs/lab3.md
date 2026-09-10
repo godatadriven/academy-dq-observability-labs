@@ -16,7 +16,7 @@
    You see: `3/3 checks PASSED`, and `All is good`.
 3. Answer: what does each check ask? Which one rings if the copy did not run last night?
 
-**Stop here.** Part B comes after the next slide.
+**Stop here.** Part B starts at the slide "Catch the Case".
 
 ## Part B · Catch the case
 
