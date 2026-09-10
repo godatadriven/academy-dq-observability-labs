@@ -52,11 +52,18 @@ Any editor works. The trainers use VS Code, <https://code.visualstudio.com>, wit
 
 ## Step 3 — Get the sandbox and build it
 
-The sandbox and the lab files are in one public repo: <https://github.com/xebia/dq-observability-labs>. In a terminal:
+The sandbox and the lab files are in one public repo: <https://github.com/xebia/dq-observability-labs>.
+
+1. Clone it, in any terminal:
 
 ```bash
 git clone https://github.com/xebia/dq-observability-labs.git
-cd dq-observability-labs/jaffle_shop
+```
+
+2. In VS Code, open the whole `dq-observability-labs` folder: **File > Open Folder**. The lab files (`exercises/`) and the dbt project (`jaffle_shop/`) now sit in one sidebar. Work in this one window all day.
+3. Open a terminal in VS Code: **Terminal > New Terminal**. It starts in `jaffle_shop/`. Run:
+
+```bash
 uv sync                      # install Python and the tools
 source .venv/bin/activate    # use them in this terminal
 dbt deps                     # get dbt's add-ons

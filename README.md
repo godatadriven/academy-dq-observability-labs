@@ -27,7 +27,7 @@ Do them in this order. Each folder has a `README.md` with the steps.
 | 4 | `exercises/lab4_lineage/` | Name every reader of the table, and put your checks in front of an AI agent. |
 | 5 | `exercises/lab5_planning/` | Write one check for your own work. |
 
-Run every command from `jaffle_shop/`, in a terminal where you ran `source .venv/bin/activate` (Windows: `.venv\Scripts\activate`). Do not move the folders. Some commands use `../exercises/`.
+Work in one VS Code window: open the whole `dq-observability-labs` folder. Put the lab's README preview on one side (right-click the file > **Open Preview**), the file you fill on the other, and the terminal below. A new terminal starts in `jaffle_shop/`. Run `source .venv/bin/activate` in it once (Windows: `.venv\Scripts\activate`). Do not move the folders. Some commands use `../exercises/`.
 
 ## Words
 
