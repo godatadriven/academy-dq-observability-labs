@@ -2,7 +2,9 @@
 
 **Goal:** close the gate that the Jaffle Shop did not have. **Time:** 10 minutes.
 
-1. Open `models/staging/lab2_contract.yml`. It is a contract: the columns that the copy promises. `amount` has the rule `not_null`. `enforced: false` means the contract is off.
+> Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
+
+1. Open [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml). It is a contract: the columns that the copy promises. `amount` has the rule `not_null`. `enforced: false` means the contract is off.
 2. Answer first: with the contract on, what happens to the 1 June events, which have no amount?
 3. Change `enforced: false` to `enforced: true`. Save (Cmd+S). Run:
 

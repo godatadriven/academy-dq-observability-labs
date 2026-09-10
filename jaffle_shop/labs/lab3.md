@@ -2,9 +2,11 @@
 
 **Goal:** see which checks ring on 2 June, and why. **Time:** Part A 25 minutes, Part B 15 minutes.
 
+> Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
+
 ## Part A · A normal morning
 
-1. Open `soda/lab3_checks.yml`. It has three Soda checks: freshness, volume, and validity.
+1. Open [`soda/lab3_checks.yml`](../soda/lab3_checks.yml). It has three Soda checks: freshness, volume, and validity.
 2. Run a scan. `NOW` is the morning that the scan pretends it is: Sunday 31 May, 09:00.
 
    ```bash
@@ -16,7 +18,7 @@
 
 ## Part B · Catch the case
 
-4. Open `soda/lab3_repeat.yml`. It is Module 1's rule: ring when more than 20% of payments repeat the customer's last amount.
+4. Open [`soda/lab3_repeat.yml`](../soda/lab3_repeat.yml). It is Module 1's rule: ring when more than 20% of payments repeat the customer's last amount.
 5. Scan 31 May with both files:
 
    ```bash

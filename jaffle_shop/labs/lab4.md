@@ -2,9 +2,11 @@
 
 **Goal:** name every reader of the payments table, and stop the agent from reading bad data. **Time:** Part A 20 minutes, Part B 10 minutes.
 
+> Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
+
 ## Part A · Every reader, named
 
-1. Open `models/lab4_exposures.yml`. An exposure tells dbt who reads a table from outside dbt: the dashboard, the finance close, and the reorder agent.
+1. Open [`models/lab4_exposures.yml`](../models/lab4_exposures.yml). An exposure tells dbt who reads a table from outside dbt: the dashboard, the finance close, and the reorder agent.
 2. Run. The `+` means "and everything built from it".
 
    ```bash
@@ -24,7 +26,7 @@
    ```
 
    You see: `Yesterday's takings: EUR 4,012.80`. That is the frozen number that the agent orders from.
-6. Open `agent_tools.py`. Change `GATE = False` to `GATE = True`. Save.
+6. Open [`agent_tools.py`](../agent_tools.py). Change `GATE = False` to `GATE = True`. Save.
 7. Run step 5 again, and once for `2026-05-31`.
 
    You see: 31 May gives the takings, `EUR 5,481.40`. 2 June gives `HOLD: 2 checks failed`.

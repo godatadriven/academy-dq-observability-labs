@@ -138,7 +138,7 @@ Everything happens in `jaffle_shop/`.
 
 ## How a lab works
 
-Open the lab's page, for example `labs/lab1.md`. To read it as a page, right-click it and choose **Open Preview**. Then follow the steps: open a file, run a command, compare with "You see", and answer the questions. Some steps ask you to change one value. Save the file (Cmd+S on a Mac, Ctrl+S on Windows) before you run the command again.
+Open the lab's page, for example `labs/lab1.md`. It opens as a formatted page. Drag its tab to the right half of the window, so it stays next to your files. Then follow the steps: open a file, run a command, compare with "You see", and answer the questions. Some steps ask you to change one value. Save the file (Cmd+S on a Mac, Ctrl+S on Windows) before you run the command again.
 
 To put a file back as it was, run `git checkout` and the file name, for example `git checkout seeds/lab1_tests.yml`.
 
