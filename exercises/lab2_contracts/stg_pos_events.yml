@@ -1,14 +1,6 @@
-# Lab 2 · A gate on the pipe.
-# Module 1: "In your pipeline: the copy refuses to run when amount is missing."
+# Lab 2 · A gate on the pipe. The steps are in README.md.
 # A contract lists the columns the copy promises, with their types.
-# A not_null constraint on amount makes an empty amount an error, not a guess.
-#
-# 1. Fill the two blanks.
-# 2. Copy this file to jaffle_shop/models/staging/stg_pos_events.yml
-# 3. From jaffle_shop/:   dbt run --select stg_pos_events
-# 4. Read the error out loud. That is the gate, closing on the 1 June events.
-# 5. Delete the file again. The Jaffle Shop had no gate. The rest of today replays what happened.
-#       rm models/staging/stg_pos_events.yml && dbt run
+# Blank 1: turn the contract on (true or false). Blank 2: the rule that says amount can never be empty.
 version: 2
 models:
   - name: stg_pos_events

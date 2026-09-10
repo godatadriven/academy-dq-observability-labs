@@ -1,15 +1,8 @@
-"""Lab 4, part 2 · Gate the reorder agent.
+"""Lab 4, Part B · Checks in front of the reorder agent. The steps are in README.md.
 
-Module 1: "Bad data made a wrong report. Now it makes a wrong action."
-The reorder agent reads the payments table with `python agent_tools.py read`, then orders. Nobody looks.
-Put your Lab 3 checks in front of what it reads: if a check fails, the agent gets HOLD,
-not the takings. You do not change the agent. You change what it can read.
-
-1. Fill the two blanks below.
-2. Copy this file to jaffle_shop/agent_tools.py (it replaces the one without a gate).
-3. From jaffle_shop/:   python agent_tools.py read 2026-05-31   ->  the takings
-                        python agent_tools.py read 2026-06-02   ->  HOLD, and which checks failed
-4. Then the trainer runs the real agent with your gate: ./reorder_agent.sh 2026-06-02
+The agent reads the payments table with `python agent_tools.py read`, then orders.
+This version runs your Lab 3 checks first. If a check fails, the agent gets HOLD.
+Fill the two blanks below.
 """
 import subprocess
 import sys
@@ -21,10 +14,11 @@ def run_checks(day: str) -> list[str]:
     """Run the Lab 3 scan for the morning of `day`. Return the names of the failed checks."""
     scan = subprocess.run(
         ["soda", "scan", "-d", "jaffle_shop", "-c", "soda/configuration.yml",
-         "-v", f"NOW={day} 09:00:00", "______"],        # blank 1: your Lab 3 checks file, from jaffle_shop/
+         "-v", f"NOW={day} 09:00:00", "______"],        # blank 1: the same checks-file path as in the Lab 3 scan command
         capture_output=True, text=True,
     )
-    if scan.returncode == ___:                           # blank 2: the exit code when every check passes
+    if scan.returncode == ___:                           # blank 2: every program ends with a number, its exit code.
+                                                         # Find it: run a scan that passes, then run: echo $?
         return []
     failed = [line.split("]", 1)[1].replace("[FAILED]", "").strip()
               for line in scan.stdout.splitlines() if "[FAILED]" in line]

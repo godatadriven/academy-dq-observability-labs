@@ -1,13 +1,11 @@
-# Lab 3 · Checks on the payments table: freshness and volume from Module 1's pillars, and a validity check.
-# The sandbox holds every night from 17 May to 17 June. NOW is the morning you scan.
-# Fill the blanks. Then, from jaffle_shop/:
-#   soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" ../exercises/lab3_soda/checks.yml
+# Lab 3 · Checks on the payments table. The steps and the scan command are in README.md.
 # 31 May is a normal morning. Every check you write must pass on it.
 
 checks for stg_pos_payments:
 
   # FRESHNESS · Did the data arrive on time?
   # The copy runs at 03:30. At 09:00 the newest load is a few hours old.
+  # Write a duration, like 6h or 1d.
   - freshness(_etl_loaded_at) < ___:
       name: "freshness: the copy ran last night"
       filter: _etl_loaded_at <= '${NOW}'::timestamp
@@ -19,16 +17,16 @@ checks for stg_pos_payments:
       filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
 
   # VALIDITY · Is every amount a real price?
-  # Amounts are in cents. The cheapest item on the menu is 2.80. The biggest order is about 40 in May, about 53 at the new prices.
+  # Amounts are in cents: EUR 1.00 is 100. The cheapest item costs EUR 2.80.
+  # Prices went up on 1 June. The biggest correct order is then about EUR 53.
   - invalid_count(amount) = 0:
       name: "validity: every amount is in the menu's range"
       valid min: ___
       valid max: ___
       filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
 
-# Lab 3b · Module 1's example standard: "below 20% repeats". Count payments equal to the
-# customer's previous one, and ring above one in five. models/marts/payments_repeat_rate.sql
-# counts it per day. Normal: about 6 in 100. Uncomment the lines below and fill the threshold.
+# Part B · Alert when more than 20 in 100 payments equal the customer's last payment. A normal day has about 6.
+# Delete the '# ' (the hash and the space) at the start of the five lines below. Fill the threshold, a number.
 
 # checks for payments_repeat_rate:
 #   - repeat_rate < ___:
