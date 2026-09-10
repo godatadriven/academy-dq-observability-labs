@@ -1,0 +1,7 @@
+jaffle_shop.duckdb
+target/
+dbt_packages/
+logs/
+.venv/
+.user.yml
+dbt_internal_packages/

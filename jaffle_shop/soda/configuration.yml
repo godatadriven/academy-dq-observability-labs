@@ -1,0 +1,3 @@
+data_source jaffle_shop:
+  type: duckdb
+  path: jaffle_shop.duckdb

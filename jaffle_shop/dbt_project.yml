@@ -1,0 +1,25 @@
+name: 'jaffle_shop'
+version: '1.0.0'
+config-version: 2
+profile: 'jaffle_shop'
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+models:
+  jaffle_shop:
+    staging:
+      +materialized: view
+      # The copy writes real tables. A contract's not_null is only enforced on a table.
+      stg_pos_events:
+        +materialized: table
+      stg_pos_payments:
+        +materialized: table
+    marts:
+      +materialized: table
+seeds:
+  jaffle_shop:
+    raw_pos_payments:
+      +column_types: {event: varchar, paid_at: timestamp, _etl_loaded_at: timestamp}
+vars:
+  # dbt_expectations needs a time zone for "recent data" (Lab 1, timeliness).
+  "dbt_date:time_zone": "Europe/Amsterdam"

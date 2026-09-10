@@ -1,0 +1,20 @@
+# The Module 1 pillars, on the payments table, as a scan on a chosen morning.
+# The sandbox holds every night from 17 May to 17 June. NOW says which morning you are on.
+#   soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-06-02 09:00:00" soda/checks.yml
+# 31 May: all green. 2 June: freshness and volume green, the repeat check fails. That is the case.
+# Schema is not here: the rename happened inside the JSON event, so the table's columns never
+# changed. The contract in Lab 2 is the gate.
+
+checks for stg_pos_payments:
+  - freshness(_etl_loaded_at) < 1d:
+      name: "FRESHNESS - the copy ran last night"
+      filter: _etl_loaded_at <= '${NOW}'::timestamp
+  - row_count between 500 and 700:
+      name: "VOLUME - last night's payments arrived"
+      filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
+
+checks for payments_repeat_rate:
+  - repeat_rate < 20:
+      repeat_rate query: |
+        select repeat_rate_pct from payments_repeat_rate where pay_date = cast('${NOW}' as date) - 1
+      name: "DISTRIBUTION - payments do not repeat the customer's last amount (normal: about 6%)"

@@ -1,0 +1,48 @@
+# Lab 1 · Six defects, six tests.
+# The table is Module 1's "Spot the defects", row for row: seeds/orders_daily_extract.csv
+# Each comment is one defect and the rule from Module 1's key. Fill each blank.
+#
+# 1. Copy this file to jaffle_shop/seeds/extract_tests.yml
+# 2. Copy extract_updated_before_placed.sql to jaffle_shop/tests/
+# 3. From jaffle_shop/:   dbt test --select orders_daily_extract
+#
+# Six tests, six failures. That is the goal. Do not fix the data.
+version: 2
+seeds:
+  - name: orders_daily_extract
+    data_tests:
+      # UNIQUENESS · C-1042 appears twice.
+      # Rule: no two rows share customer, total, and email.
+      - dbt_expectations.______:
+          arguments:
+            column_list: ["customer_id", "order_total", "email"]
+    columns:
+      - name: email
+        data_tests:
+          # COMPLETENESS · the email is missing.
+          # Rule: email is not null. A built-in test.
+          - ______
+          # VALIDITY · "(at)" is not an email address.
+          # Rule: email matches a pattern with @ and a dot after it.
+          - dbt_expectations.expect_column_values_to_match_regex:
+              arguments:
+                regex: "______"
+      - name: order_total
+        data_tests:
+          # ACCURACY · a total below zero: that did not happen.
+          # Rule: order_total is 0 or more.
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: ___
+      - name: _loaded_at
+        data_tests:
+          # TIMELINESS · refreshed on 2 July, today is 11 July.
+          # Rule: the table's load time is within one day of now.
+          - dbt_expectations.expect_row_values_to_have_recent_data:
+              arguments:
+                datepart: ___
+                interval: ___
+
+# CONSISTENCY · an order in 2027, last updated in 2026.
+# Rule: an order is not updated before it is placed. No test in the list fits.
+# Write it as a query: extract_updated_before_placed.sql

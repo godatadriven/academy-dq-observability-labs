@@ -1,0 +1,6 @@
+customer_id,name,email,order_date,order_total,updated_at,_loaded_at
+C-1042,Eva Visser,e.visser@mail.com,2026-06-08,240.00,2026-06-08,2026-07-02 06:00:00
+C-1043,Bram Bakker,,2026-06-09,89.50,2026-06-09,2026-07-02 06:00:00
+C-1044,Priya Nair,priya.nair(at)mail,2026-06-10,-120.00,2026-06-10,2026-07-02 06:00:00
+C-1042,Eva Visser,e.visser@mail.com,2027-01-14,240.00,2026-06-08,2026-07-02 06:00:00
+C-1045,Jan de Wit,j.dewit@mail.com,2026-06-11,1310.00,2026-06-11,2026-07-02 06:00:00

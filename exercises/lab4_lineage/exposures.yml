@@ -1,0 +1,25 @@
+# Lab 4 · Every reader of the payments table, named.
+# Module 1: "Three things read the payments table: a revenue dashboard, the finance close,
+# and a stock-ordering script that nobody documented." Today that reader is the reorder agent.
+# dbt cannot see any of them yet.
+#
+# 1. From jaffle_shop/:   dbt ls --select stg_pos_payments+
+#    Models and tests only. Nothing outside dbt.
+# 2. Fill the blanks. Copy this file to jaffle_shop/models/exposures.yml
+# 3. Run the same command again. Three readers appear. That is the IMPACT line of Module 1's good alert.
+version: 2
+exposures:
+  - name: revenue_dashboard
+    type: dashboard
+    owner: {name: Sam}                 # Module 1: Sam in finance owns the definition of revenue
+    depends_on: [ref('______')]
+
+  - name: finance_close
+    type: ______                       # dashboard, notebook, analysis, ml, or application
+    owner: {name: Sam}
+    depends_on: [ref('revenue_daily')]
+
+  - name: ingredient_reorder_agent
+    type: ______                       # it acts on the data every morning. Nobody looks.
+    owner: {name: ______}              # Module 1: a name, not a team. Nobody wrote one down. Who is it now?
+    depends_on: [ref('______')]        # it reads the payments table itself. See agent_tools.py

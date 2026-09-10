@@ -1,0 +1,24 @@
+version: 2
+# Module 1, "The Safety Net: Four Tests". The Jaffle Shop's four nightly tests on the
+# payments table. All four pass from 1 June to 17 June. Nothing is missing, nothing is
+# invalid, nothing is duplicated. The amounts are only stale, and no test asks about that.
+models:
+  - name: stg_pos_payments
+    description: The payments table. Written every night at 03:30 by the copy, with the note.
+    columns:
+      - name: amount
+        description: Cents. From 1 June, the customer's last May amount, or 0.
+        data_tests: [not_null]
+      - name: payment_id
+        data_tests: [unique]
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
+      - name: customer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id

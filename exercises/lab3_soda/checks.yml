@@ -1,0 +1,37 @@
+# Lab 3 · Checks on the payments table: freshness and volume from Module 1's pillars, and a validity check.
+# The sandbox holds every night from 17 May to 17 June. NOW is the morning you scan.
+# Fill the blanks. Then, from jaffle_shop/:
+#   soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" ../exercises/lab3_soda/checks.yml
+# 31 May is a normal morning. Every check you write must pass on it.
+
+checks for stg_pos_payments:
+
+  # FRESHNESS · Did the data arrive on time?
+  # The copy runs at 03:30. At 09:00 the newest load is a few hours old.
+  - freshness(_etl_loaded_at) < ___:
+      name: "freshness: the copy ran last night"
+      filter: _etl_loaded_at <= '${NOW}'::timestamp
+
+  # VOLUME · Did all of it arrive? About 600 payments a night. Count a few nights first:
+  #   dbt show --inline "select paid_at::date as day, count(*) from {{ ref('stg_pos_payments') }} group by 1 order by 1" --limit 40
+  - row_count between ___ and ___:
+      name: "volume: last night's payments arrived"
+      filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
+
+  # VALIDITY · Is every amount a real price?
+  # Amounts are in cents. The cheapest item on the menu is 2.80. The biggest order is about 40 in May, about 53 at the new prices.
+  - invalid_count(amount) = 0:
+      name: "validity: every amount is in the menu's range"
+      valid min: ___
+      valid max: ___
+      filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
+
+# Lab 3b · Module 1's example standard: "below 20% repeats". Count payments equal to the
+# customer's previous one, and ring above one in five. models/marts/payments_repeat_rate.sql
+# counts it per day. Normal: about 6 in 100. Uncomment the lines below and fill the threshold.
+
+# checks for payments_repeat_rate:
+#   - repeat_rate < ___:
+#       repeat_rate query: |
+#         select repeat_rate_pct from payments_repeat_rate where pay_date = cast('${NOW}' as date) - 1
+#       name: "distribution: payments do not repeat the customer's last amount"
