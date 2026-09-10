@@ -1,18 +1,13 @@
-# Lab 1 · Six defects, six tests.
-# The table is Module 1's "Spot the defects", row for row: seeds/orders_daily_extract.csv
-# Each comment is one defect and the rule from Module 1's key. Fill each blank.
-#
-# 1. Copy this file to jaffle_shop/seeds/extract_tests.yml
-# 2. Copy extract_updated_before_placed.sql to jaffle_shop/tests/
-# 3. From jaffle_shop/:   dbt test --select orders_daily_extract
-#
-# Six tests, six failures. That is the goal. Do not fix the data.
+# Lab 1 · Six defects, six tests. The steps are in README.md.
+# Each comment below is one defect and its rule. Fill each blank.
 version: 2
 seeds:
   - name: orders_daily_extract
     data_tests:
       # UNIQUENESS · C-1042 appears twice.
       # Rule: no two rows share customer, total, and email.
+      # The rule looks at three columns together. Pick one: expect_compound_columns_to_be_unique
+      # or expect_column_values_to_be_unique
       - dbt_expectations.______:
           arguments:
             column_list: ["customer_id", "order_total", "email"]
@@ -24,6 +19,7 @@ seeds:
           - ______
           # VALIDITY · "(at)" is not an email address.
           # Rule: email matches a pattern with @ and a dot after it.
+          # In a pattern, .+ means some text and \\. means a real dot. In YAML, write each backslash twice.
           - dbt_expectations.expect_column_values_to_match_regex:
               arguments:
                 regex: "______"
@@ -37,12 +33,13 @@ seeds:
       - name: _loaded_at
         data_tests:
           # TIMELINESS · refreshed on 2 July, today is 11 July.
-          # Rule: the table's load time is within one day of now.
+          # Rule: the table's load time is within one day of now. datepart is a unit of time, interval a number.
+          # dbt compares with the real time now, so this test always fails on this old table.
           - dbt_expectations.expect_row_values_to_have_recent_data:
               arguments:
                 datepart: ___
                 interval: ___
 
 # CONSISTENCY · an order in 2027, last updated in 2026.
-# Rule: an order is not updated before it is placed. No test in the list fits.
+# Rule: an order is not updated before it is placed, and not placed after today. No test above fits.
 # Write it as a query: extract_updated_before_placed.sql
