@@ -2,6 +2,8 @@
 
 **Goal:** write one check for your own work, with a number and a person's name, ready to use on Monday. **Time:** 12 minutes.
 
+> Keep this page on the right: drag its tab to the right half of the window.
+
 In Module 1 you wrote a **standard** for your own data incident: a number, a name, and a mechanism. A **mechanism** is something that runs by itself, like a test, a check, or a contract. Find your standard on the Miro board, in "Your incidents". No standard? Take one below.
 
 ## Steps
