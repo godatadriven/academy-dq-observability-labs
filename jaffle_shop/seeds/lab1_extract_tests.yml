@@ -1,0 +1,64 @@
+# LAB 1 · Six defects, six tests                                   Time: 30 minutes
+#
+# Goal: write one dbt test for each of Module 1's six defects. All six must fail.
+# You learn: dbt's generic tests, built in or from the dbt_expectations package, and a singular test.
+# A failing test is good news here. It means that the test found the bad row. Do not fix the data.
+#
+# The table is Module 1's "Spot the defects" table, loaded as the seed orders_daily_extract.
+# To see it, run:  dbt show --select orders_daily_extract
+#
+# Steps
+#   1. Switch this file on. Select every line below the START line, then press Cmd+/ (Windows: Ctrl+/).
+#   2. Fill the six blanks: ______ or ___. Each comment names one defect, its rule, and a hint.
+#   3. Open tests/lab1_updated_before_placed.sql. Switch it on and fill its two blanks.
+#   4. Run:  dbt test --select orders_daily_extract
+#
+# When it works: six lines say FAIL 1. The last line starts with  Done. PASS=0 WARN=0 ERROR=6
+# dbt counts a failed test as an error. Six errors is the goal.
+# Stuck? LABS.md, Lab 1. To start over: git checkout seeds/lab1_extract_tests.yml
+# Done early? Write "built in", "package" or "query" next to each test. Why do most of the six need more than a built-in test?
+#
+# ---- START: select from the next line to the end of the file, then press Cmd+/ ----
+# version: 2
+# seeds:
+#   - name: orders_daily_extract
+#     data_tests:
+#       # UNIQUENESS · C-1042 appears twice.
+#       # Rule: no two rows share customer, total, and email.
+#       # The rule looks at three columns together. Pick one: expect_compound_columns_to_be_unique
+#       # or expect_column_values_to_be_unique
+#       - dbt_expectations.______:
+#           arguments:
+#             column_list: ["customer_id", "order_total", "email"]
+#     columns:
+#       - name: email
+#         data_tests:
+#           # COMPLETENESS · the email is missing.
+#           # Rule: email is not null. A built-in test.
+#           - ______
+#           # VALIDITY · "(at)" is not an email address.
+#           # Rule: email matches a pattern: some text, @, some text, a dot, some text.
+#           # In a pattern, .+ means some text and \\. means a real dot. The start is done. Write the end.
+#           - dbt_expectations.expect_column_values_to_match_regex:
+#               arguments:
+#                 regex: ".+@.+______"
+#       - name: order_total
+#         data_tests:
+#           # ACCURACY · a total below zero: that did not happen.
+#           # Rule: order_total is 0 or more.
+#           - dbt_expectations.expect_column_values_to_be_between:
+#               arguments:
+#                 min_value: ___
+#       - name: _loaded_at
+#         data_tests:
+#           # TIMELINESS · refreshed on 2 July, today is 11 July.
+#           # Rule: the table's load time is within one day of now.
+#           # datepart is a word for a unit of time, like day or hour. interval is a number, like 1.
+#           # dbt compares with the real time now, so this test always fails on this old table.
+#           - dbt_expectations.expect_row_values_to_have_recent_data:
+#               arguments:
+#                 datepart: ___
+#                 interval: ___
+#
+# # CONSISTENCY · an order in 2027, last updated in 2026.
+# # No test above fits this rule. It is the query in tests/lab1_updated_before_placed.sql

@@ -1,0 +1,54 @@
+# LAB 2 · A gate on the pipe                                        Time: 10 minutes
+#
+# Goal: make the copy stop when the amount is missing. The Jaffle Shop did not have this gate.
+# You learn: a dbt model contract, with a not_null constraint.
+#
+# What went wrong: the copy, the model stg_pos_events, reads each payment event from the payment app.
+# From 1 June the app sends amount_cents instead of amount. The copy finds no amount and writes an
+# empty value (NULL). Nothing fails. The payments table then fills it with the customer's last amount.
+#
+# Words
+#   Gate: something that stops a bad change before it lands. In this lab, the gate is a contract.
+#   Contract: the columns and types a model promises. dbt checks them each time it builds the model.
+#   Constraint: one rule in the contract. not_null means that the column can never be empty.
+#
+# Steps
+#   1. Guess first: with the contract on, what happens when dbt builds the copy?
+#   2. Switch this file on. Select every line below the START line, then press Cmd+/ (Windows: Ctrl+/).
+#   3. Fill the two blanks.
+#   4. Run:  dbt run --select stg_pos_events
+#   5. Read the error out loud. That is the gate.
+#   6. Switch this file off again: select the same lines and press Cmd+/. Then run:  dbt run
+#      Labs 3 and 4 need the copy without the gate, as the Jaffle Shop had it.
+#
+# When it works: step 4 stops with this error. No payment gets a guessed amount.
+#   Constraint Error: NOT NULL constraint failed: stg_pos_events__dbt_tmp.amount
+# Step 6 ends with  Done. PASS=5
+# Stuck? LABS.md, Lab 2. To start over: git checkout models/staging/lab2_contract.yml
+#
+# ---- START: select from the next line to the end of the file, then press Cmd+/ ----
+# version: 2
+# models:
+#   - name: stg_pos_events
+#     config:
+#       contract:
+#         # Blank 1: turn the contract on, true or false.
+#         enforced: ___
+#     columns:
+#       - name: payment_id
+#         data_type: integer
+#       - name: customer_id
+#         data_type: integer
+#       - name: cafe_id
+#         data_type: varchar
+#       - name: payment_method
+#         data_type: varchar
+#       - name: amount
+#         data_type: integer
+#         constraints:
+#           # Blank 2: the rule that says amount can never be empty.
+#           - type: ______
+#       - name: paid_at
+#         data_type: timestamp
+#       - name: _etl_loaded_at
+#         data_type: timestamp

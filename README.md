@@ -13,21 +13,21 @@ payment app ──► stg_pos_events ──► stg_pos_payments ──► revenu
 
 ## Before the day
 
-Follow `exercises/setup-guide.md`. It takes about 30 minutes.
+Follow `setup-guide.md`. Part 1 installs the labs, in about 45 minutes. Part 2 shows how the labs work: the terminal, a YAML file, and the folders, in about 10 minutes.
 
 ## The labs
 
-Do them in this order. Each folder has a `README.md` with the steps.
+Every lab file is in `jaffle_shop/`, where dbt and Soda read it, and starts switched off. `jaffle_shop/LABS.md` lists each lab: the file to open, the command, the time, and what to do when it does not work. The steps are at the top of each lab file.
 
-| Lab | Folder | You will |
-| --- | --- | --- |
-| 1 | `exercises/lab1_dbt_tests/` | Write one dbt test for each of Module 1's six defects. |
-| 2 | `exercises/lab2_contracts/` | Stop the copy when the amount is missing. |
-| 3 | `exercises/lab3_soda/` | Write Soda checks, and catch the Frozen Payments. |
-| 4 | `exercises/lab4_lineage/` | Name every reader of the table, and put your checks in front of an AI agent. |
-| 5 | `exercises/lab5_planning/` | Write one check for your own work. |
+| Lab | You will |
+| --- | --- |
+| 1 | Write one dbt test for each of Module 1's six defects. |
+| 2 | Stop the copy when the amount is missing. |
+| 3 | Write Soda checks, and catch the Frozen Payments. |
+| 4 | Name every reader of the table, and put your checks in front of an AI agent. |
+| 5 | Write one check for your own work. |
 
-Work in one VS Code window: open the whole `dq-observability-labs` folder. Put the lab's README preview on one side (right-click the file > **Open Preview**), the file you fill on the other, and the terminal below. A new terminal starts in `jaffle_shop/`. Run `source .venv/bin/activate` in it once (Windows: `.venv\Scripts\activate`). Do not move the folders. Some commands use `../exercises/`.
+Work in one VS Code window: open the whole `dq-observability-labs` folder. A new terminal starts in `jaffle_shop/`. Run the activate line in it once: `source .venv/bin/activate`, or on Windows `.venv\Scripts\activate`.
 
 ## Words
 
