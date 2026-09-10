@@ -1,6 +1,6 @@
 # My check
 
-Lab 5. Write your answers after each line. The steps are in `labs/lab5.md`.
+Lab 5. Write each answer after its line. The steps are in `labs/lab5.md`.
 
 The standard, in one sentence:
 

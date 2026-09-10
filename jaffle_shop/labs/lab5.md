@@ -10,7 +10,14 @@ In Module 1 you wrote a **standard** for your own data incident: a number, a nam
 
 1. **Write** the mechanism of your standard as code: a dbt test (Lab 1), a contract (Lab 2), or a Soda check (Lab 3). Write it in [`labs/my_check.md`](my_check.md), from a template. Copy the shape from a Lab 1, 2, or 3 file: the list below names one for each standard. You do not need to run it.
 2. **Add** the number and the owner's name in the file. Then put your check on a sticky under your standard on the Miro board.
-3. **Swap** with the pair next to you. They have ninety seconds to find a loophole. Then fix it. Online: swap with the next pair on the Miro board.
+3. **Check** it:
+
+   ```bash
+   uv run check.py 5
+   ```
+
+   **You see:** `4 of 4 done. Well done.` A line with ✗ says what is missing.
+4. **Swap** with the pair next to you. They have ninety seconds to find a loophole. Then fix it. Online: swap with the next pair on the Miro board.
 
 A loophole is:
 

@@ -23,6 +23,8 @@ The last line is `Ready. Module 1's four tests pass, and Soda can read the table
 | `soda/` | The Soda connection, the setup check, and Lab 3's checks. |
 | `build.py` | Builds the sandbox in one go: `uv run build.py`. |
 | `labs/` | One short page per lab. |
+| `check.py` | Checks your lab work: `uv run check.py 1`. A ✓ for each part you got right. |
+| `models/lab6_semantic.yml` | The semantic layer: the metric `revenue`, defined once. Lab 6. |
 | `selectors.yml` | Makes a plain `dbt test` skip Lab 1's tests, which fail on purpose. |
 
 ## NOW, the morning you scan

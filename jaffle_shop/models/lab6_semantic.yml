@@ -1,0 +1,48 @@
+# Lab 6 · One definition of revenue. The steps: labs/lab6.md
+# A semantic layer defines each metric once, with an owner. Every reader asks it.
+version: 2
+
+semantic_models:
+  - name: payments
+    description: The payments table, as the semantic layer sees it.
+    model: ref('stg_pos_payments')
+    defaults:
+      agg_time_dimension: paid_at
+    entities:
+      - name: payment
+        type: primary
+        expr: payment_id
+    dimensions:
+      - name: paid_at
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: amount_eur
+        description: The amount of each payment, in euros.
+        agg: sum
+        expr: amount / 100.0
+      - name: payment_count
+        description: One for each payment.
+        agg: count
+        expr: payment_id
+
+metrics:
+  # Module 1's one definition of revenue. Owner: Sam, in finance.
+  - name: revenue
+    label: Revenue
+    description: "Completed payments, in euros. Owner: Sam."
+    type: simple
+    type_params:
+      measure: amount_eur
+
+  # Your turn, in labs/lab6.md: add the metrics payments and average_payment here.
+
+# The time spine: one row per day, so a metric can be grouped by day. Leave it as it is.
+models:
+  - name: metricflow_time_spine
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        granularity: day

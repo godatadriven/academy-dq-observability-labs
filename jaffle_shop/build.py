@@ -11,7 +11,7 @@ import sys
 STEPS = [
     ("Get dbt's packages", ["dbt", "deps"], "Installed"),
     ("Load the tables", ["dbt", "seed"], "PASS=4"),
-    ("Build the models", ["dbt", "run"], "PASS=5"),
+    ("Build the models", ["dbt", "run"], "ERROR=0"),
     ("Run Module 1's four tests", ["dbt", "test"], "PASS=4"),
     ("Check that Soda can read the tables",
      ["soda", "scan", "-d", "jaffle_shop", "-c", "soda/configuration.yml",
