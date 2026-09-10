@@ -17,7 +17,7 @@ Follow `setup-guide.md`: open the labs in GitHub Codespaces, VS Code in your bro
 
 ## The labs
 
-Each lab has one short page in `jaffle_shop/labs/`: run the files, then do one task of your own. `uv run check.py 1` (and so on) shows a ✓ for each part you got right.
+Each lab has one short page in `jaffle_shop/labs/`: run the files, then do one task of your own. `uv run tools/check.py 1` (and so on) shows a ✓ for each part you got right.
 
 | Lab | You will |
 | --- | --- |

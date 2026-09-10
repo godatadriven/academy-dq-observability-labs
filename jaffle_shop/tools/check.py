@@ -1,7 +1,7 @@
 """Check your lab work. Run it from this folder, with the lab and part:
 
-    uv run check.py 1        Lab 1
-    uv run check.py 3a       Lab 3, Part A
+    uv run tools/check.py 1        Lab 1
+    uv run tools/check.py 3a       Lab 3, Part A
 
 Each line says ✓ when that part is right, or ✗ with what to do next.
 """
@@ -133,12 +133,12 @@ def lab4a() -> list[bool]:
 
 
 def lab4b() -> list[bool]:
-    gate = re.search(r"^GATE\s*=\s*True", open("agent_tools.py").read(), re.M) is not None
-    results = [show(gate, "Your turn: the gate is on", "In agent_tools.py, change 'GATE = False' to 'GATE = True'.")]
+    gate = re.search(r"^GATE\s*=\s*True", open("tools/agent_tools.py").read(), re.M) is not None
+    results = [show(gate, "Your turn: the gate is on", "In tools/agent_tools.py, change 'GATE = False' to 'GATE = True'.")]
     if gate:
-        results.append(show("HOLD" in run("python", "agent_tools.py", "read", "2026-06-02"),
+        results.append(show("HOLD" in run("python", "tools/agent_tools.py", "read", "2026-06-02"),
                             "2 June: the agent gets HOLD"))
-        results.append(show("Yesterday's takings" in run("python", "agent_tools.py", "read", "2026-05-31"),
+        results.append(show("Yesterday's takings" in run("python", "tools/agent_tools.py", "read", "2026-05-31"),
                             "31 May: the agent gets the takings",
                             "A check fails on a normal day: fix your limit in Lab 3, Part B, first."))
     return results
@@ -207,7 +207,7 @@ LABS = {"1": [lab1], "2": [lab2], "3a": [lab3a], "3b": [lab3b], "3": [lab3a, lab
 if __name__ == "__main__":
     part = sys.argv[1].lower() if len(sys.argv) > 1 else ""
     if part not in LABS:
-        sys.exit("Use: uv run check.py 1   (1, 2, 3a, 3b, 4a, 4b, 5, or 6)")
+        sys.exit("Use: uv run tools/check.py 1   (1, 2, 3a, 3b, 4a, 4b, 5, or 6)")
     print(f"Lab {part}")
     results = [r for step in LABS[part] for r in step()]
     done = sum(results)

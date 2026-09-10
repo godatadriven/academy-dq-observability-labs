@@ -21,11 +21,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - name: Build the sandbox, as in the setup guide
-        run: uv run build.py
+        run: uv run tools/build.py
       - name: Lab 1 tests fail on purpose, six of them
         shell: bash
         run: |
           uv run dbt test --select orders_daily_extract > lab1.txt || true
           grep "ERROR=6" lab1.txt
       - name: The agent's read command
-        run: uv run python agent_tools.py read 2026-05-31
+        run: uv run python tools/agent_tools.py read 2026-05-31

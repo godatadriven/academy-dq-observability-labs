@@ -25,7 +25,7 @@ uv run dbt run --select stg_pos_events
 ### 4 · Check
 
 ```bash
-uv run check.py 2
+uv run tools/check.py 2
 ```
 
 **You see:** `3 of 3 done. Well done.`

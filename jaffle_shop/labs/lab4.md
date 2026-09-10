@@ -23,7 +23,7 @@ uv run dbt ls --select stg_pos_payments+
 3. Save, and check:
 
 ```bash
-uv run check.py 4a
+uv run tools/check.py 4a
 ```
 
 **You see:** `4 of 4 done. Well done.`
@@ -35,17 +35,17 @@ uv run check.py 4a
 ### 3 · Read 2 June
 
 ```bash
-uv run python agent_tools.py read 2026-06-02
+uv run python tools/agent_tools.py read 2026-06-02
 ```
 
 **You see:** `EUR 4,012.80`. The agent orders from this frozen number.
 
 ### 4 · Your turn
 
-Open [`agent_tools.py`](../agent_tools.py). Change `GATE = False` to `GATE = True`. Save, and check:
+Open [`tools/agent_tools.py`](../tools/agent_tools.py). Change `GATE = False` to `GATE = True`. Save, and check:
 
 ```bash
-uv run check.py 4b
+uv run tools/check.py 4b
 ```
 
 **You see:** `3 of 3 done. Well done.` Now the agent gets HOLD on 2 June.

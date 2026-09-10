@@ -26,7 +26,7 @@ Finance says: no order is above €1,000. Add that test.
 ### 3 · Check
 
 ```bash
-uv run check.py 1
+uv run tools/check.py 1
 ```
 
 **You see:** `2 of 2 done. Well done.`

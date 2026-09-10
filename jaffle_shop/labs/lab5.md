@@ -17,7 +17,7 @@ Open [`labs/my_check.md`](my_check.md), and fill it in:
 3. Save, and check:
 
 ```bash
-uv run check.py 5
+uv run tools/check.py 5
 ```
 
 **You see:** `4 of 4 done. Well done.`

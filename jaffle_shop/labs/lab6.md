@@ -39,7 +39,7 @@ uv run dbt parse
 ### 3 · Check
 
 ```bash
-uv run check.py 6
+uv run tools/check.py 6
 ```
 
 **You see:** `3 of 3 done. Well done.`

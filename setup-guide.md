@@ -29,5 +29,5 @@ Want a head start? Read `basics.md`, five minutes.
 | You see | Do this |
 | --- | --- |
 | Your company blocks Codespaces | Use a personal laptop or browser. If that is not possible, follow `local-install.md`. |
-| `Step N failed` in the terminal | Open a new terminal: menu ☰ > Terminal > New Terminal. Paste `uv run build.py`, and press Enter. |
+| `Step N failed` in the terminal | Open a new terminal: menu ☰ > Terminal > New Terminal. Paste `uv run tools/build.py`, and press Enter. |
 | Still stuck | Email the trainer with a screenshot. On the day, arrive 20 minutes early. |

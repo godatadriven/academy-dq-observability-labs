@@ -1,9 +1,9 @@
 """The reorder agent's two tools. Module 1, slide 9: "an agent reorders stock ... Nobody looks."
 
-    python agent_tools.py read 2026-06-02            yesterday's takings, for the morning of 2 June
-    python agent_tools.py order 161 "why this amount" tomorrow's order
+    python tools/agent_tools.py read 2026-06-02            yesterday's takings, for the morning of 2 June
+    python tools/agent_tools.py order 161 "why this amount" tomorrow's order
 
-The agent (reorder_agent.sh) can run these two commands and nothing else.
+The agent (tools/reorder_agent.sh) can run these two commands and nothing else.
 """
 import subprocess
 import sys
@@ -57,4 +57,4 @@ if __name__ == "__main__":
     elif command == "order" and len(sys.argv) >= 3:
         print(place_order(kg=int(sys.argv[2]), reason=" ".join(sys.argv[3:])))
     else:
-        sys.exit('Use: python agent_tools.py read 2026-06-02   or   python agent_tools.py order 161 "reason"')
+        sys.exit('Use: python tools/agent_tools.py read 2026-06-02   or   python tools/agent_tools.py order 161 "reason"')

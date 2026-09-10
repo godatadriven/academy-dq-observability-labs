@@ -26,7 +26,7 @@ Add a fourth check: every payment has a customer. Add these lines under the othe
 ```
 
 ```bash
-uv run check.py 3a
+uv run tools/check.py 3a
 ```
 
 **You see:** `2 of 2 done. Well done.`
@@ -50,7 +50,7 @@ uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-26 09:
 Change the `5` to a limit that is quiet all of May, but rings on 2 June. Save, and check:
 
 ```bash
-uv run check.py 3b
+uv run tools/check.py 3b
 ```
 
 **You see:** `2 of 2 done. Well done.` A ✗ line names the day your limit gets wrong.

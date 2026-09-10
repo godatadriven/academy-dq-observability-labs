@@ -5,7 +5,7 @@ dbt-labs' [jaffle_shop](https://github.com/dbt-labs/jaffle_shop_duckdb) on DuckD
 ## Build
 
 ```bash
-uv run build.py
+uv run tools/build.py
 ```
 
 The last line is `Ready. Module 1's four tests pass, and Soda can read the tables.` The steps, and what to do when it does not work, are in `../setup-guide.md`.
@@ -14,18 +14,23 @@ The last line is `Ready. Module 1's four tests pass, and Soda can read the table
 
 | Name | What |
 | --- | --- |
+| `labs/` | One short page per lab. Start here. |
+| `models/` | The SQL files dbt builds, and the YAML for Labs 2, 4, and 6. |
+| `seeds/` | The CSV files dbt loads, and Lab 1's tests. |
+| `soda/` | The Soda connection, the setup check, and Lab 3's checks. |
+| `tests/` | Lab 1's query test. |
+| `tools/` | What runs the labs: `build.py`, `check.py`, the reorder agent (`agent_tools.py`, `reorder_agent.sh`), and `generate_feed.py`, which made the data. You open it only in Lab 4. |
+
+The tables:
+
+| Table | What |
+| --- | --- |
 | `stg_pos_events` | The copy. It reads `amount` from each event of the payment app. |
-| `stg_pos_payments` | The payments table. The note fills an empty amount with the customer's last amount, or 0. |
+| `stg_pos_payments` | The payments table. It fills an empty amount with the customer's last amount, or 0. |
 | `revenue_daily` | What the revenue dashboard and the finance close read. |
 | `payments_repeat_rate` | Per day: how many payments equal the customer's previous one. |
-| `agent_tools.py` | The reorder agent's two commands: `read` and `order`. Lab 4 switches on its gate. |
-| `reorder_agent.sh` | The reorder agent. Your trainer runs it on the day. |
-| `soda/` | The Soda connection, the setup check, and Lab 3's checks. |
-| `build.py` | Builds the sandbox in one go: `uv run build.py`. |
-| `labs/` | One short page per lab. |
-| `check.py` | Checks your lab work: `uv run check.py 1`. A ✓ for each part you got right. |
-| `models/lab6_semantic.yml` | The semantic layer: the metric `revenue`, defined once. Lab 6. |
-| `selectors.yml` | Makes a plain `dbt test` skip Lab 1's tests, which fail on purpose. |
+
+VS Code hides the files that dbt and uv make or need, like `target/` and `profiles.yml`. They are still there. `selectors.yml` makes a plain `dbt test` skip Lab 1's tests, which fail on purpose.
 
 ## NOW, the morning you scan
 
