@@ -13,7 +13,7 @@ payment app ──► stg_pos_events ──► stg_pos_payments ──► revenu
 
 ## Before the day
 
-Follow `setup-guide.md`. Part 1 opens the labs in GitHub Codespaces, VS Code in your browser, in about 10 minutes. Part 2 shows how the labs work, in about 10 minutes.
+Follow `setup-guide.md`: open the labs in GitHub Codespaces, VS Code in your browser, in about 10 minutes. `basics.md` is an optional five-minute read.
 
 ## The labs
 
