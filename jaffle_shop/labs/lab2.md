@@ -4,15 +4,40 @@
 
 > This page stays on the left. Click a file name to open it on the right.
 
-### 1 · Open the contract
+### 1 · Read the file
 
-Open [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml). It lists the columns the copy promises. It is off: `enforced: false`.
+Open [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml). It is a contract: the columns the copy promises. Here is its start:
+
+```yaml
+models:
+  - name: stg_pos_events
+    config:
+      contract:
+        enforced: false
+    columns:
+      - name: amount
+        data_type: integer
+        constraints:
+          - type: not_null
+```
+
+| Line | What it means |
+| --- | --- |
+| `- name: stg_pos_events` | The copy: the model that reads the payment app's events. |
+| `enforced: false` | The contract is off. With `true`, dbt checks every promise when it builds the copy. |
+| `- name: amount` | One promised column. |
+| `data_type: integer` | Its type: a whole number. |
+| `- type: not_null` | A rule on it: it can never be empty. |
+
+If the data breaks a promise, dbt stops the build. That is the gate.
 
 ### 2 · Your turn
 
 1. Switch it on: change `enforced: false` to `enforced: true`.
 2. Add a rule: `payment_method` can never be empty. Under `payment_method`, add the same two lines that `amount` has: `constraints:` and `- type: not_null`.
 3. Save.
+
+**Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows `not_null` under a column.
 
 ### 3 · Run the copy
 

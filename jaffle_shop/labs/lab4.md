@@ -6,9 +6,26 @@
 
 ## Part A · Every reader, named
 
-### 1 · List the readers
+### 1 · Read the file
 
-Open [`models/lab4_exposures.yml`](../models/lab4_exposures.yml). An exposure tells dbt who reads a table from outside dbt.
+Open [`models/lab4_exposures.yml`](../models/lab4_exposures.yml). An exposure tells dbt who reads a table from outside dbt. Here is the first:
+
+```yaml
+exposures:
+  - name: revenue_dashboard
+    type: dashboard
+    owner: {name: Sam}
+    depends_on: [ref('revenue_daily')]
+```
+
+| Line | What it means |
+| --- | --- |
+| `- name: revenue_dashboard` | The reader. |
+| `type: dashboard` | What kind of reader it is. |
+| `owner: {name: Sam}` | The person who answers for it: Sam. |
+| `depends_on: [ref('revenue_daily')]` | The table it reads. |
+
+### 2 · List the readers
 
 ```bash
 uv run dbt ls --select stg_pos_payments+
@@ -16,11 +33,11 @@ uv run dbt ls --select stg_pos_payments+
 
 **You see:** three lines that start with `exposure:`.
 
-### 2 · Your turn
+### 3 · Your turn
 
 1. The agent's owner is `nobody`. Change it to a person's name.
 2. Add a fourth reader: the weekly email to the café managers. Copy the `revenue_dashboard` block. Change the name to `weekly_cafe_email`, the type to `application`, and the owner to a person.
-3. Save, and check:
+3. Save, and check. **Hint:** dbt's page on [exposures](https://docs.getdbt.com/docs/build/exposures) lists every field.
 
 ```bash
 uv run tools/check.py 4a
@@ -32,7 +49,7 @@ uv run tools/check.py 4a
 
 ## Part B · Checks in front of the agent
 
-### 3 · Read 2 June
+### 4 · Read 2 June
 
 ```bash
 uv run python tools/agent_tools.py read 2026-06-02
@@ -40,7 +57,7 @@ uv run python tools/agent_tools.py read 2026-06-02
 
 **You see:** `EUR 4,012.80`. The agent orders from this frozen number.
 
-### 4 · Your turn
+### 5 · Your turn
 
 Open [`tools/agent_tools.py`](../tools/agent_tools.py). Change `GATE = False` to `GATE = True`. Save, and check:
 
