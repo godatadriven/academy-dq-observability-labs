@@ -1,7 +1,7 @@
 {
   "terminal.integrated.cwd": "${workspaceFolder}/jaffle_shop",
   "workbench.editorAssociations": {
-    "**/labs/*.md": "vscode.markdown.preview.editor"
+    "**/labs/lab*.md": "vscode.markdown.preview.editor"
   },
   "workbench.startupEditor": "none"
 }
