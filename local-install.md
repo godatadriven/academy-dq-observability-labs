@@ -12,10 +12,10 @@ cd ~
 ```
 
 ```bash
-git clone https://github.com/xebia/dq-observability-labs.git
+git clone https://github.com/godatadriven/academy-dq-observability-labs.git
 ```
 
-5. In VS Code, choose **File > Open Folder**, open `dq-observability-labs`, and trust the authors.
+5. In VS Code, choose **File > Open Folder**, open `academy-dq-observability-labs`, and trust the authors.
 6. Choose **Terminal > New Terminal**. It starts in `jaffle_shop`. Run:
 
 ```bash

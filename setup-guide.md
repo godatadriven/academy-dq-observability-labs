@@ -11,7 +11,7 @@ The labs run in **GitHub Codespaces**: VS Code in your browser, with everything 
 ## Steps
 
 1. Sign in to GitHub.
-2. Open <https://codespaces.new/xebia/dq-observability-labs> and click **Create codespace**.
+2. Open <https://codespaces.new/godatadriven/academy-dq-observability-labs> and click **Create codespace**.
 3. Wait about three minutes. VS Code opens in your browser, and the terminal at the bottom builds the labs by itself. The last line must be:
 
    ```
