@@ -2,7 +2,7 @@
 
 **Goal:** write one check for your own work, with a number and a person's name, ready to use on Monday. **Time:** 12 minutes.
 
-> Keep this page on the right: drag its tab to the right half of the window.
+> This page stays on the left. Your files open on the right.
 
 In Module 1 you wrote a **standard** for your own data incident: a number, a name, and a mechanism. A **mechanism** is something that runs by itself, like a test, a check, or a contract. Find your standard on the Miro board, in "Your incidents". No standard? Take one below.
 
@@ -24,7 +24,7 @@ A loophole is:
 
 Each has a number, a name, and a mechanism. Sanne is the integrations engineer who owns the payment feed. Sam works in finance.
 
-1. **The gate.** Any column change in the payments feed stops the copy and alerts #data-alerts within 15 minutes. Owner: Sanne. Mechanism: a contract check in the pipeline. Copy the shape from `models/staging/lab2_contract.yml`.
-2. **The repeat.** Alert #data-alerts if more than 20% of a day's payments equal the customer's previous payment. Owner: Sanne. Mechanism: a check every morning after the copy. Copy the shape from `soda/lab3_repeat.yml`.
-3. **The load.** The payments table is loaded by 04:00, every day. Owner: Sanne. Mechanism: a freshness check at 04:00 that posts to #data-alerts. Copy the shape from the freshness check in `soda/lab3_checks.yml`.
-4. **The menu.** Every payment amount is between €2.80 and €60.00: 280 to 6000 in cents. Owner: Sam. Mechanism: a validity check on the payments table every morning. Copy the shape from the validity check in `soda/lab3_checks.yml`.
+1. **The gate.** Any column change in the payments feed stops the copy and alerts #data-alerts within 15 minutes. Owner: Sanne. Mechanism: a contract check in the pipeline. Copy the shape from [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml).
+2. **The repeat.** Alert #data-alerts if more than 20% of a day's payments equal the customer's previous payment. Owner: Sanne. Mechanism: a check every morning after the copy. Copy the shape from [`soda/lab3_repeat.yml`](../soda/lab3_repeat.yml).
+3. **The load.** The payments table is loaded by 04:00, every day. Owner: Sanne. Mechanism: a freshness check at 04:00 that posts to #data-alerts. Copy the shape from the freshness check in [`soda/lab3_checks.yml`](../soda/lab3_checks.yml).
+4. **The menu.** Every payment amount is between €2.80 and €60.00: 280 to 6000 in cents. Owner: Sam. Mechanism: a validity check on the payments table every morning. Copy the shape from the validity check in [`soda/lab3_checks.yml`](../soda/lab3_checks.yml).

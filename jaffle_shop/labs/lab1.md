@@ -2,7 +2,7 @@
 
 **Goal:** see Module 1's six defects caught by dbt tests. **Time:** 20 minutes.
 
-> Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
+> This page stays on the left. Click a file name on it, and the file opens on the right.
 >
 > To run a command: hover over the grey box, click the copy icon, click in the terminal, paste, and press Enter.
 

@@ -2,7 +2,7 @@
 
 **Goal:** name every reader of the payments table, and stop the agent from reading bad data. **Time:** Part A 12 minutes. Part B 12 minutes, with your trainer's two demos.
 
-> Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
+> This page stays on the left. Click a file name on it, and the file opens on the right.
 
 ## Part A · Every reader, named
 

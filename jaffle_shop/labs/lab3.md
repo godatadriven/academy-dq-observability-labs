@@ -2,12 +2,12 @@
 
 **Goal:** see which checks ring on 2 June, and why. **Time:** Part A 15 minutes, Part B 10 minutes.
 
-> Keep this page on the right: drag its tab to the right half of the window. Click a file name on the page to open the file.
+> This page stays on the left. Click a file name on it, and the file opens on the right.
 
 ## Part A · A normal morning
 
 1. Open [`soda/lab3_checks.yml`](../soda/lab3_checks.yml). It has three Soda checks: freshness, volume, and validity.
-2. Scan Sunday 31 May. `NOW` is the morning that the scan pretends it is.
+2. Scan Sunday 31 May. `NOW` is the morning that the scan pretends it is. Each scan reads yesterday's payments.
 
    ```bash
    uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" soda/lab3_checks.yml
