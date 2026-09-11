@@ -1,4 +1,4 @@
--- The copy, part 2: the note. A developer wrote it in 2023, when card terminals sometimes
+-- The payments table: the note. A developer wrote it in 2023, when card terminals sometimes
 -- sent no amount: "empty amount? Use this customer's last amount. No last amount? Use 0."
 -- Since 1 June every amount is empty. So every payment gets the customer's last May amount,
 -- at the old price, and a first-time customer gets 0. This is the payments table.

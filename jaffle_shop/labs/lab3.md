@@ -13,7 +13,7 @@ Open [`soda/lab3_checks.yml`](../soda/lab3_checks.yml): three Soda checks on the
 ```yaml
 checks for stg_pos_payments:
   - freshness(_etl_loaded_at) < 1d:
-      name: "freshness: the copy ran last night"
+      name: "freshness: last night's data is here"
       filter: _etl_loaded_at <= '${NOW}'::timestamp
 ```
 

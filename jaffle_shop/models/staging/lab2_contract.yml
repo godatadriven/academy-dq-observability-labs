@@ -1,5 +1,5 @@
-# Lab 2 · A gate on the copy: a contract. The steps: labs/lab2.md
-# The contract lists the columns that the copy promises. not_null: amount can never be empty.
+# Lab 2 · A gate on the parse: a contract. The steps: labs/lab2.md
+# The contract lists the columns that the parse promises. not_null: amount can never be empty.
 version: 2
 models:
   - name: stg_pos_events

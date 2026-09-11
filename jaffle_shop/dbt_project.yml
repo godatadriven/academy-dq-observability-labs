@@ -9,7 +9,7 @@ models:
   jaffle_shop:
     staging:
       +materialized: view
-      # The copy writes real tables. A contract's not_null is only enforced on a table.
+      # The models write real tables. A contract's not_null is only enforced on a table.
       stg_pos_events:
         +materialized: table
       stg_pos_payments:

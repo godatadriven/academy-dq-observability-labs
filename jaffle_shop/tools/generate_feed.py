@@ -171,7 +171,7 @@ def sunday(rows, rng, kind, bank=2_560_000, table=1_990_000, near=2_000):
             r["event"] = event_for(r["customer_id"], cents, date(2026, 6, 14))
 
 
-def the_copy(rows):
+def the_parse(rows):
     """What models/staging/stg_pos_payments.sql does, in Python, to check the numbers."""
     last, out = {}, []
     for r in sorted(rows, key=lambda r: (r["paid_at"], r["payment_id"])):
@@ -186,9 +186,9 @@ def the_copy(rows):
 
 def story(rows):
     """The case numbers the sandbox must reproduce."""
-    copied = the_copy(rows)
+    parsed = the_parse(rows)
     prev, by_day = {}, {}
-    for r, amount in copied:
+    for r, amount in parsed:
         d = r["paid_at"][:10]
         s = by_day.setdefault(d, {"n": 0, "bank": 0, "table": 0, "ret": 0, "rep": 0, "zero": 0})
         s["n"] += 1; s["bank"] += r["true_cents"]; s["table"] += amount; s["zero"] += amount == 0

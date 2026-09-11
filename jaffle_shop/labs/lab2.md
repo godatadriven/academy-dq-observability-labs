@@ -1,12 +1,12 @@
-# Lab 2 · A gate on the copy
+# Lab 2 · A gate on the parse
 
-> **10 minutes** · **Goal:** a contract that stops the copy when the amount is missing.<br>
+> **10 minutes** · **Goal:** a contract that stops the parse when the amount is missing.<br>
 > **You write:** the gate switched on, and two new promises.<br>
 > **Done when:** `uv run tools/check.py 2` says `4 of 4 done. Well done.` Then switch it off again.
 
 ### 1 · Read the file
 
-Open [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml). It is a contract: the columns that the copy promises to deliver. Here is its start:
+Open [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml). It is a contract: the columns that the parse promises to deliver. Here is its start:
 
 ```yaml
 models:
@@ -23,15 +23,15 @@ models:
 
 | Line | What it means |
 | --- | --- |
-| `- name: stg_pos_events` | The copy: the first dbt model. Every night it reads the payment app's events from raw, where they land as they are. An event is the message the app sends for each payment. |
-| `enforced: false` | The contract is off. With `true`, dbt checks every promise when it builds the copy. |
+| `- name: stg_pos_events` | The parse: the first dbt model. Every night it reads the payment app's events from raw, where they land as they are. An event is the message the app sends for each payment. |
+| `enforced: false` | The contract is off. With `true`, dbt checks every promise when it builds the parse. |
 | `- name: amount` | One promised column. |
 | `data_type: integer` | Its type: a whole number, in cents. |
 | `constraints:` / `- type: not_null` | A rule on the column: it can never be empty. |
 
-When the data breaks a promise, dbt stops the build. That is the gate. On 1 June the app renamed `amount` to `amount_cents`, so the copy finds `amount` empty.
+When the data breaks a promise, dbt stops the build. That is the gate. On 1 June the app renamed `amount` to `amount_cents`, so the parse finds `amount` empty.
 
-### 2 · Run the copy
+### 2 · Run the parse
 
 ```bash
 uv run dbt run --select stg_pos_events
@@ -54,7 +54,7 @@ The contract is off, so the empty amounts get through.
 
 > **Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule, with an example of each.
 
-Run the copy again. It stops, and the error has this line:
+Run the parse again. It stops, and the error has this line:
 
 ```bash
 uv run dbt run --select stg_pos_events

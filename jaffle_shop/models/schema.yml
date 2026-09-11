@@ -4,7 +4,7 @@ version: 2
 # invalid, nothing is duplicated. The amounts are only stale, and no test asks about that.
 models:
   - name: stg_pos_payments
-    description: The payments table. Written every night at 03:30 by the copy, with the note.
+    description: The payments table. Written every night at 03:30, after the parse, with the note.
     columns:
       - name: amount
         description: Cents. From 1 June, the customer's last May amount, or 0.
