@@ -45,11 +45,11 @@ uv run mf query --metrics revenue --group-by metric_time__day --start-time 2026-
 
 Add two metrics under `revenue`, where the comment says "Your turn".
 
-**Task A.** `payments`: the number of payments on a day.
+**Task 1.** `payments`: the number of payments on a day.
 
-**Task B.** `average_payment`: revenue divided by payments.
+**Task 2.** `average_payment`: revenue divided by payments.
 
-**Hint:** Task A has the same shape as `revenue`, with another measure. Our file writes a simple metric with `type_params:` and `measure:`, so copy that shape, not the one on dbt's page. Task B is a [ratio metric](https://docs.getdbt.com/docs/build/ratio): it divides one metric by another.
+**Hint:** Task 1 has the same shape as `revenue`, with another measure. Our file writes a simple metric with `type_params:` and `measure:`, so copy that shape, not the one on dbt's page. Task 2 is a [ratio metric](https://docs.getdbt.com/docs/build/ratio): it divides one metric by another.
 
 After a change, let dbt read the file, then ask again:
 
