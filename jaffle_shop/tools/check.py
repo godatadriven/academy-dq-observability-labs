@@ -107,7 +107,7 @@ def lab1() -> list[bool]:
     ]
 
 
-# Lab 2 · a contract on the copy
+# Lab 2 · a contract on the parse
 
 def lab2() -> list[bool]:
     contract = read_yaml("models/staging/lab2_contract.yml")
@@ -132,10 +132,10 @@ def lab2() -> list[bool]:
         if "Constraint Error" in out:
             wrong = "The build stops on another rule, not on the empty amount."
         elif "ERROR=0" in out:
-            wrong = "The copy builds: nothing stops it."
+            wrong = "The parse builds: nothing stops it."
         else:
-            wrong = "dbt cannot build the copy: " + next((l.strip() for l in out.splitlines() if "Error" in l), "")
-        results.append(show(stops, "The gate stops the copy on the 1 June events", wrong))
+            wrong = "dbt cannot build the parse: " + next((l.strip() for l in out.splitlines() if "Error" in l), "")
+        results.append(show(stops, "The gate stops the parse on the 1 June events", wrong))
     return results
 
 

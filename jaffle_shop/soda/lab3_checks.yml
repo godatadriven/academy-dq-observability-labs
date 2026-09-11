@@ -3,9 +3,9 @@
 # ${NOW} is the morning of the scan. You set it in the command with -v NOW="...".
 
 checks for stg_pos_payments:
-  # FRESHNESS · Did the copy run last night? It runs at 03:30.
+  # FRESHNESS · Did last night's data arrive? The parse runs at 03:30.
   - freshness(_etl_loaded_at) < 1d:
-      name: "freshness: the copy ran last night"
+      name: "freshness: last night's data is here"
       filter: _etl_loaded_at <= '${NOW}'::timestamp
 
   # VOLUME · Did a normal night of payments arrive? About 600.

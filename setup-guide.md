@@ -4,6 +4,7 @@ The labs run in **GitHub Codespaces**: VS Code in your browser, with everything 
 
 ## You need
 
+- **Required:** SQL, dbt basics, and a terminal. See "Required before the day" in [README.md](README.md), with free links to learn them.
 - A laptop with a browser, and Wi-Fi.
 - A GitHub account. No account? Create one for free at <https://github.com/signup>.
 - Your standard from Module 1: the rule you wrote under your incident on the Miro board. A photo is fine.

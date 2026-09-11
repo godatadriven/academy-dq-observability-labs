@@ -4,13 +4,27 @@ The labs for Module 2. The case is the Frozen Payments from Module 1.
 
 ## The case in three lines
 
-On 1 June, the Jaffle Shop's payment app renamed the field `amount` to `amount_cents`. The copy kept reading `amount`, found nothing, and did not fail. The payments table then filled each empty amount with the customer's last amount, or with 0 for a new customer. Every test passed for seventeen days, and every amount was wrong.
+On 1 June, the Jaffle Shop's payment app renamed the field `amount` to `amount_cents`. The parse kept reading `amount`, found nothing, and did not fail. The payments table then filled each empty amount with the customer's last amount, or with 0 for a new customer. Every test passed for seventeen days, and every amount was wrong.
 
 ```
 payment app ──► raw_pos_payments ──► stg_pos_events ──► stg_pos_payments ──► revenue_daily ──► dashboard, finance close
-                (raw: the events,     (the copy)         (the payments table)                   (month-end report)
+                (raw: the events,     (the parse)        (the payments table)                   (month-end report)
                  as they land)                            the reorder agent reads the payments table too
 ```
+
+## Required before the day
+
+You must know these. The day does not teach SQL or dbt, and without them the labs are very hard to follow.
+
+- **SQL:** you can read and write SELECT, WHERE, JOIN, and GROUP BY.
+- **dbt:** you know what a model is, and what `ref()`, `dbt run`, and `dbt test` do.
+- **A terminal and YAML:** you can run a command, and read a YAML file. `basics.md` shows both.
+- **Module 1:** you took part in it. The labs replay its case.
+
+New to SQL or dbt? Do one of these before the day. Both are free.
+
+- SQL: [SQLBolt](https://sqlbolt.com/), lessons 1 to 11.
+- dbt: [dbt Fundamentals](https://learn.getdbt.com/courses/dbt-fundamentals).
 
 ## Before the day
 
@@ -24,7 +38,7 @@ Each lab has one short page in `jaffle_shop/labs/`: read the file, run it, then 
 | Lab | You will |
 | --- | --- |
 | 1 | See Module 1's six defects caught by dbt tests, then write a package test and a query test. |
-| 2 | Switch on a contract that stops the copy, and add two rules to it. |
+| 2 | Switch on a contract that stops the parse, and add two rules to it. |
 | 3 | Write two Soda checks, and set the limit that catches the Frozen Payments. |
 | 4 | Name every reader of the table, and put your checks in front of an AI agent. |
 | 5 | Define revenue once, in a semantic layer, and add two metrics. |
@@ -44,3 +58,6 @@ Your codespace opens on the Lab 1 page. A new terminal starts in `jaffle_shop/`.
 | Check | A Soda rule about a table. |
 | Scan | Soda runs your checks once. |
 | The payments table | `stg_pos_payments`. Every lab looks at it. |
+| pos | Point of sale: the payment app in the cafés. |
+| `raw_` | The start of a table name in raw: the data as it landed. |
+| `stg_` | The start of a table name in staging: cleaned by dbt. |
