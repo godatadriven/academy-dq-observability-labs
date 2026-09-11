@@ -5,5 +5,30 @@
   },
   "workbench.startupEditor": "none",
   "markdown.preview.openMarkdownLinks": "inEditor",
-  "markdown.links.openLocation": "beside"
+  "markdown.links.openLocation": "beside",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/__pycache__": true,
+    ".github": true,
+    ".devcontainer": true,
+    ".vscode": true,
+    ".gitignore": true,
+    "jaffle_shop/.venv": true,
+    "jaffle_shop/target": true,
+    "jaffle_shop/logs": true,
+    "jaffle_shop/dbt_packages": true,
+    "jaffle_shop/jaffle_shop.duckdb": true,
+    "jaffle_shop/jaffle_shop.duckdb.wal": true,
+    "jaffle_shop/.user.yml": true,
+    "jaffle_shop/.gitignore": true,
+    "jaffle_shop/.python-version": true,
+    "jaffle_shop/pyproject.toml": true,
+    "jaffle_shop/uv.lock": true,
+    "jaffle_shop/package-lock.yml": true,
+    "jaffle_shop/packages.yml": true,
+    "jaffle_shop/profiles.yml": true,
+    "jaffle_shop/selectors.yml": true,
+    "jaffle_shop/tests/.gitkeep": true
+  }
 }

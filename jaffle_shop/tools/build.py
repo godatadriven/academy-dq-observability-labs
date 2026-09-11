@@ -1,6 +1,6 @@
 """Build the sandbox in one go. Run it from this folder:
 
-    uv run build.py
+    uv run tools/build.py
 
 It gets dbt's packages, loads the tables, builds the models, runs Module 1's four tests,
 and runs the Soda setup check. It stops at the first step that fails.

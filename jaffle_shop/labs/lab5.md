@@ -1,46 +1,81 @@
-# Lab 5 · The one check you ship
+# Lab 5 · One definition of revenue
 
-**12 minutes** · Write one check for your own work, with a number and a person's name.
+**12 minutes** · Define revenue once, in a semantic layer, and add two metrics of your own.
 
 > This page stays on the left. Click a file name to open it on the right.
 
-### 1 · Find your standard
+### 1 · Read the file
 
-In Module 1 you wrote a standard for your own incident: a number, a name, and a mechanism. It is on the Miro board, in "Your incidents". No standard? Take one from the list below.
+Open [`models/lab5_semantic.yml`](../models/lab5_semantic.yml). A semantic layer defines each metric once. Every reader asks it, instead of writing its own sum. The file has two parts: `semantic_models`, what can be added up, and `metrics`, the names that readers ask for. Here are the lines that matter:
 
-### 2 · Your turn
+```yaml
+    measures:
+      - name: amount_eur
+        agg: sum
+        expr: amount / 100.0
 
-Open [`labs/my_check.md`](my_check.md), and fill it in:
-
-1. Your standard, the limit, and the owner.
-2. The check, as code. Keep one of the three templates, and fill every `______`.
-3. Save, and check:
-
-```bash
-uv run check.py 5
+metrics:
+  - name: revenue
+    type: simple
+    type_params:
+      measure: amount_eur
 ```
 
-**You see:** `4 of 4 done. Well done.`
+| Line | What it means |
+| --- | --- |
+| `measures:` | Numbers from the payments table that can be added up or counted. |
+| `- name: amount_eur` | One measure: the amount of each payment, in euros. |
+| `agg: sum` / `expr: amount / 100.0` | How: add up `amount`, divided by 100, because the amounts are in cents. |
+| `- name: revenue` | The metric: the name that every reader asks for. |
+| `type: simple` / `measure: amount_eur` | A simple metric is one measure. Here, revenue is the sum of the amounts. |
 
-### 3 · Find the loophole
+The file also has a second measure, `payment_count`: one for each payment.
 
-Swap with the pair next to you. You have ninety seconds to find a loophole in their check:
+### 2 · Ask for revenue
 
-- a team, not a name: "the team", "someone"
-- a word, not a number: "regularly", "soon"
-- a meeting, not a mechanism: "we check it in the review"
+`mf` is MetricFlow, the command that asks the semantic layer. `metric_time__day` means: one row per day.
 
-Then fix your own. Put your check on a sticky under your standard on the Miro board.
+```bash
+uv run mf query --metrics revenue --group-by metric_time__day --start-time 2026-05-31 --end-time 2026-06-02
+```
 
-**Talk:** what does your check's alert say?
+**You see:** three days. 1 June is `4012.8`.
 
-## No standard? Take one of these
+### 3 · Your turn
 
-Sanne owns the payment feed. Sam works in finance.
+Add two metrics under `revenue`, where the comment says "Your turn".
 
-| Standard | Owner | Copy the shape from |
-| --- | --- | --- |
-| Any column change in the payments feed stops the copy. | Sanne | [`lab2_contract.yml`](../models/staging/lab2_contract.yml) |
-| Ring if more than 20% of a day's payments repeat the last amount. | Sanne | [`lab3_repeat.yml`](../soda/lab3_repeat.yml) |
-| The payments table is loaded by 04:00, every day. | Sanne | the freshness check in [`lab3_checks.yml`](../soda/lab3_checks.yml) |
-| Every amount is between €2.80 and €60.00 (280 to 6000 in cents). | Sam | the validity check in [`lab3_checks.yml`](../soda/lab3_checks.yml) |
+**Task A.** `payments`: the number of payments on a day.
+
+**Task B.** `average_payment`: revenue divided by payments.
+
+**Hint:** Task A has the same shape as `revenue`, with another measure. Our file writes a simple metric with `type_params:` and `measure:`, so copy that shape, not the one on dbt's page. Task B is a [ratio metric](https://docs.getdbt.com/docs/build/ratio): it divides one metric by another.
+
+After a change, let dbt read the file, then ask again:
+
+```bash
+uv run dbt parse
+uv run mf query --metrics revenue,payments,average_payment --group-by metric_time__day --start-time 2026-06-01 --end-time 2026-06-01
+```
+
+**You see:** `4012.8`, `576`, and `6.96667`. A message about a new version of MetricFlow can show too. Ignore it.
+
+### 4 · Check
+
+```bash
+uv run tools/check.py 5
+```
+
+**You see:** `3 of 3 done. Well done.`
+
+### Extra
+
+Ask for revenue by payment method. Add `payment_method` as a dimension of the semantic model, next to `paid_at`. **Hint:** dbt's page on [dimensions](https://docs.getdbt.com/docs/build/dimensions): a payment method is `categorical`. Then run `uv run dbt parse`, and ask:
+
+```bash
+uv run mf query --metrics revenue --group-by payment__payment_method --start-time 2026-06-01 --end-time 2026-06-01
+```
+
+**You see:** four payment methods. `credit_card` is `2653.5`.
+
+**Stuck?** An error about the file: the spaces at the start of a line you added do not line up. Fix them, and run `uv run dbt parse` again.

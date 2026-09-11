@@ -19,7 +19,7 @@ git clone https://github.com/godatadriven/academy-dq-observability-labs.git
 6. Choose **Terminal > New Terminal**. It starts in `jaffle_shop`. Run:
 
 ```bash
-uv run build.py
+uv run tools/build.py
 ```
 
 The last line must start with `Ready`. If a company network blocks the download, use a personal hotspot.

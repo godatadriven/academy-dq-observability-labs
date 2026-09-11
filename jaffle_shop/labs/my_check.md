@@ -1,47 +1,17 @@
 # My check
 
-Lab 5. Write each answer after its line. The steps are in `labs/lab5.md`.
+Lab 6. Write each answer after its line, on the same line. The steps are in `labs/lab6.md`.
 
 The standard, in one sentence:
 
-The limit it checks, for example 20% or 04:00:
+The limit, as a number:
 
 The owner, a person's name:
 
 Where it runs, and when:
 
-The check, as code. Keep one template and delete the others. Replace each `______`.
+Why this kind of check:
 
-A dbt test:
+For example: "Every day, the payments match the bank deposit within 1%." · "1%" · "Sam" · "a dbt test, every night after the build" · "it compares two tables, so a query test".
 
-```yaml
-models:
-  - name: ______
-    columns:
-      - name: ______
-        data_tests:
-          - ______
-```
-
-A Soda check:
-
-```yaml
-checks for ______:
-  - ______:
-      name: "______"
-```
-
-A contract, like Lab 2:
-
-```yaml
-models:
-  - name: ______
-    config:
-      contract:
-        enforced: true
-    columns:
-      - name: ______
-        data_type: ______
-        constraints:
-          - type: ______
-```
+Your check itself goes in `tests/my_check.sql` or in `soda/my_check.yml`.

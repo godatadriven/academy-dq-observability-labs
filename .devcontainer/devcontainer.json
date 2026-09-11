@@ -1,11 +1,11 @@
 // The labs in GitHub Codespaces: VS Code in the browser, with Python, uv, dbt, and Soda.
-// On create, it builds the sandbox with `uv run build.py`.
+// On create, it builds the sandbox with `uv run tools/build.py`.
 {
   "name": "DQ Observability labs",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
   "hostRequirements": { "cpus": 2 },
   "features": { "ghcr.io/devcontainers/features/sshd:1": {} },
-  "postCreateCommand": "pipx install uv && cd jaffle_shop && uv run build.py",
+  "postCreateCommand": "pipx install uv && cd jaffle_shop && uv run tools/build.py",
   "customizations": {
     "codespaces": { "openFiles": ["jaffle_shop/labs/lab1.md"] },
     "vscode": {

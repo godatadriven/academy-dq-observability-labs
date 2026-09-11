@@ -1,9 +1,9 @@
 """The reorder agent's two tools. Module 1, slide 9: "an agent reorders stock ... Nobody looks."
 
-    python agent_tools.py read 2026-06-02            yesterday's takings, for the morning of 2 June
-    python agent_tools.py order 161 "why this amount" tomorrow's order
+    python tools/agent_tools.py read 2026-06-02            yesterday's takings, for the morning of 2 June
+    python tools/agent_tools.py order 161 "why this amount" tomorrow's order
 
-The agent (reorder_agent.sh) can run these two commands and nothing else.
+The agent (tools/reorder_agent.sh) can run these two commands and nothing else.
 """
 import subprocess
 import sys
@@ -23,7 +23,7 @@ def run_checks(day: str) -> list[str]:
          "-v", f"NOW={day} 09:00:00", "soda/lab3_checks.yml", "soda/lab3_repeat.yml"],
         capture_output=True, text=True,
     )
-    if scan.returncode == 0:  # Soda ends with 0 when every check passed
+    if scan.returncode in (0, 1):  # Soda ends with 0 when every check passed, 1 when one only warned
         return []
     failed = [line.split("]", 1)[1].replace("[FAILED]", "").strip()
               for line in scan.stdout.splitlines() if "[FAILED]" in line]
@@ -35,7 +35,7 @@ def read_takings(day: str) -> str:
     if GATE:
         failed = run_checks(day=day)
         if failed:
-            return f"HOLD: {len(failed)} checks failed. " + "; ".join(failed)
+            return f"HOLD: {len(failed)} check{'s' if len(failed) != 1 else ''} failed. " + "; ".join(failed)
     con = duckdb.connect("jaffle_shop.duckdb", read_only=True)
     takings = con.execute(
         "select sum(amount) / 100.0 from stg_pos_payments where paid_at::date = cast(? as date) - 1",
@@ -57,4 +57,4 @@ if __name__ == "__main__":
     elif command == "order" and len(sys.argv) >= 3:
         print(place_order(kg=int(sys.argv[2]), reason=" ".join(sys.argv[3:])))
     else:
-        sys.exit('Use: python agent_tools.py read 2026-06-02   or   python agent_tools.py order 161 "reason"')
+        sys.exit('Use: python tools/agent_tools.py read 2026-06-02   or   python tools/agent_tools.py order 161 "reason"')

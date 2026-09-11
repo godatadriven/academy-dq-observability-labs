@@ -1,4 +1,4 @@
-# Lab 6 · One definition of revenue. The steps: labs/lab6.md
+# Lab 5 · One definition of revenue. The steps: labs/lab5.md
 # A semantic layer defines each metric once, with an owner. Every reader asks it.
 version: 2
 
@@ -36,7 +36,7 @@ metrics:
     type_params:
       measure: amount_eur
 
-  # Your turn, in labs/lab6.md: add the metrics payments and average_payment here.
+  # Your turn, in labs/lab5.md: add your metrics here.
 
 # The time spine: one row per day, so a metric can be grouped by day. Leave it as it is.
 models:

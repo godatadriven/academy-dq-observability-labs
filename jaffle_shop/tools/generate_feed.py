@@ -18,7 +18,7 @@ The story, as the data tells it:
   - Each customer has a usual order, but it varies: about 6 in 100 payments
     equal that customer's previous payment on a normal day.
 
-Run from jaffle_shop/:  python generate_feed.py
+Run from jaffle_shop/:  python tools/generate_feed.py
 """
 import csv, json, random
 from datetime import date, timedelta

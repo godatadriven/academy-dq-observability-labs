@@ -1,0 +1,3 @@
+-- Lab 1 · Extra · Your second query test. The steps: labs/lab1.md
+-- Rule: one email belongs to one customer.
+-- Write a query below that returns the bad rows. No rows back means that the test passes.
