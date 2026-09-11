@@ -1,12 +1,12 @@
 # Lab 5 · One definition of revenue
 
-**12 minutes** · Define revenue once, in a semantic layer, and add two metrics of your own.
-
-> This page stays on the left. Click a file name to open it on the right.
+> **12 minutes** · **Goal:** revenue defined once, in a semantic layer, so every reader gets the same number.<br>
+> **You write:** two metrics, `payments` and `average_payment`.<br>
+> **Done when:** `uv run tools/check.py 5` says `3 of 3 done. Well done.`
 
 ### 1 · Read the file
 
-Open [`models/lab5_semantic.yml`](../models/lab5_semantic.yml). A semantic layer defines each metric once. Every reader asks it, instead of writing its own sum. The file has two parts: `semantic_models`, what can be added up, and `metrics`, the names that readers ask for. Here are the lines that matter:
+Open [`models/lab5_semantic.yml`](../models/lab5_semantic.yml). A semantic layer defines each metric once. Every reader asks it, instead of writing its own sum. The file has two parts: `semantic_models`, the numbers that can be added up, and `metrics`, the names that readers ask for. Here are the lines that matter:
 
 ```yaml
     measures:
@@ -29,7 +29,7 @@ metrics:
 | `- name: revenue` | The metric: the name that every reader asks for. |
 | `type: simple` / `measure: amount_eur` | A simple metric is one measure. Here, revenue is the sum of the amounts. |
 
-The file also has a second measure, `payment_count`: one for each payment.
+The file has a second measure too: `payment_count`, one for each payment.
 
 ### 2 · Ask for revenue
 
@@ -39,7 +39,13 @@ The file also has a second measure, `payment_count`: one for each payment.
 uv run mf query --metrics revenue --group-by metric_time__day --start-time 2026-05-31 --end-time 2026-06-02
 ```
 
-**You see:** three days. 1 June is `4012.8`.
+```
+2026-05-31T00:00:00     5783
+2026-06-01T00:00:00     4012.8
+2026-06-02T00:00:00     3799.3
+```
+
+---
 
 ### 3 · Your turn
 
@@ -49,7 +55,7 @@ Add two metrics under `revenue`, where the comment says "Your turn".
 
 **Task 2.** `average_payment`: revenue divided by payments.
 
-**Hint:** Task 1 has the same shape as `revenue`, with another measure. Our file writes a simple metric with `type_params:` and `measure:`, so copy that shape, not the one on dbt's page. Task 2 is a [ratio metric](https://docs.getdbt.com/docs/build/ratio): it divides one metric by another.
+> **Hint:** Task 1 has the same shape as `revenue`, with the other measure. Copy the shape in our file, not the one on dbt's page. Task 2 is a [ratio metric](https://docs.getdbt.com/docs/build/ratio): it divides one metric by another.
 
 After a change, let dbt read the file, then ask again:
 
@@ -58,7 +64,7 @@ uv run dbt parse
 uv run mf query --metrics revenue,payments,average_payment --group-by metric_time__day --start-time 2026-06-01 --end-time 2026-06-01
 ```
 
-**You see:** `4012.8`, `576`, and `6.96667`. A message about a new version of MetricFlow can show too. Ignore it.
+You see `4012.8`, `576`, and `6.96667`. A message about a new version of MetricFlow can show too. Ignore it.
 
 ### 4 · Check
 
@@ -66,16 +72,23 @@ uv run mf query --metrics revenue,payments,average_payment --group-by metric_tim
 uv run tools/check.py 5
 ```
 
-**You see:** `3 of 3 done. Well done.`
+```
+3 of 3 done. Well done.
+```
 
-### Extra
+---
 
-Ask for revenue by payment method. Add `payment_method` as a dimension of the semantic model, next to `paid_at`. **Hint:** dbt's page on [dimensions](https://docs.getdbt.com/docs/build/dimensions): a payment method is `categorical`. Then run `uv run dbt parse`, and ask:
+### Extra (optional)
+
+Ask for revenue by payment method. Add `payment_method` as a dimension of the semantic model, next to `paid_at`: it is `categorical` (dbt's page on [dimensions](https://docs.getdbt.com/docs/build/dimensions)). Then run `uv run dbt parse`, and ask:
 
 ```bash
 uv run mf query --metrics revenue --group-by payment__payment_method --start-time 2026-06-01 --end-time 2026-06-01
 ```
 
-**You see:** four payment methods. `credit_card` is `2653.5`.
+You see four payment methods. `credit_card` is `2653.5`.
 
-**Stuck?** An error about the file: the spaces at the start of a line you added do not line up. Fix them, and run `uv run dbt parse` again.
+### Stuck?
+
+- A ✗ line says what is wrong. Fix it, save (Cmd+S, or Ctrl+S on Windows), and check again.
+- An error about the file: the spaces at the start of a line you added do not line up. Fix them, and run `uv run dbt parse` again.

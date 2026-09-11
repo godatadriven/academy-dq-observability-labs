@@ -1,8 +1,8 @@
 # Lab 4 · Every reader, and checks in front of the agent
 
-**Part A 12 minutes, Part B 12 minutes** · Name every reader of the payments table, and stop the agent from reading bad data.
-
-> This page stays on the left. Click a file name to open it on the right.
+> **Part A 12 minutes, Part B 12 minutes** · **Goal:** name every reader of the payments table, and stop the agent from reading bad data.<br>
+> **You write:** Part A, owners and a new reader. Part B, the gate switched on.<br>
+> **Done when:** `uv run tools/check.py 4a`, then `uv run tools/check.py 4b`, say `Well done.`
 
 ## Part A · Every reader, named
 
@@ -27,13 +27,19 @@ exposures:
 
 ### 2 · List the readers
 
+`stg_pos_payments+` means: the payments table, and everything that reads from it.
+
 ```bash
 uv run dbt ls --select stg_pos_payments+ --resource-type exposure
 ```
 
-`stg_pos_payments+` means: the payments table, and everything that reads from it.
+```
+exposure:jaffle_shop.finance_close
+exposure:jaffle_shop.ingredient_reorder_agent
+exposure:jaffle_shop.revenue_dashboard
+```
 
-**You see:** three lines that start with `exposure:`.
+---
 
 ### 3 · Your turn
 
@@ -42,7 +48,7 @@ uv run dbt ls --select stg_pos_payments+ --resource-type exposure
 - The agent's owner is `nobody`. Give it a person.
 - Add a fourth reader: the weekly email to the café managers. It reads `revenue_daily`, and a person owns it. Add it at the end of the file, after an empty line.
 
-**Hint:** dbt's page on [exposures](https://docs.getdbt.com/docs/build/exposures) lists every field. For the type, an email is an `application`.
+> **Hint:** dbt's page on [exposures](https://docs.getdbt.com/docs/build/exposures) lists every field. For the type, an email is an `application`.
 
 ### 4 · Check
 
@@ -50,11 +56,15 @@ uv run dbt ls --select stg_pos_payments+ --resource-type exposure
 uv run tools/check.py 4a
 ```
 
-**You see:** `4 of 4 done. Well done.`
+```
+4 of 4 done. Well done.
+```
 
-**Extra.** The weekly email also shows the bank deposits. Make it read `revenue_daily` and `bank_deposits`.
+**Extra (optional).** The weekly email also shows the bank deposits. Make it read `revenue_daily` and `bank_deposits`.
 
-**Stop here.** Your trainer shows the agent first.
+> **Stop here.** Your trainer shows the agent first.
+
+---
 
 ## Part B · Checks in front of the agent
 
@@ -66,11 +76,17 @@ The reorder agent orders tomorrow's ingredients from yesterday's takings: the mo
 uv run python tools/agent_tools.py read 2026-06-02
 ```
 
-**You see:** `EUR 4,012.80`. It looks normal, but it is built from frozen amounts. The agent orders from it.
+```
+Yesterday's takings: EUR 4,012.80
+```
+
+It looks normal, but it is built from frozen amounts. The agent orders from it.
+
+---
 
 ### 6 · Your turn
 
-Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the gate: `GATE = False`. When the gate is `True`, the agent first runs your Lab 3 checks for that morning. If a check fails, the agent gets HOLD instead of the takings.
+Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the gate: `GATE = False`. With `GATE = True`, the agent first runs your Lab 3 checks for that morning. If a check fails, the agent gets HOLD instead of the takings.
 
 **Task.** Switch the gate on, and save.
 
@@ -80,6 +96,13 @@ Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the gate: `GA
 uv run tools/check.py 4b
 ```
 
-**You see:** `3 of 3 done. Well done.` The agent gets HOLD on 2 June. On the morning of 31 May, it still gets the takings.
+```
+3 of 3 done. Well done.
+```
 
-**Stuck?** "31 May: ✗": one of your Lab 3 checks fails on a normal day. Your Lab 3 limit is too tight.
+The agent gets HOLD on 2 June. On the morning of 31 May, it still gets the takings.
+
+### Stuck?
+
+- A ✗ line says what is wrong. Fix it, save (Cmd+S, or Ctrl+S on Windows), and check again.
+- "31 May: ✗": one of your Lab 3 checks fails on a normal day. Check your Lab 3 levels.
