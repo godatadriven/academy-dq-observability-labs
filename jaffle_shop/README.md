@@ -25,7 +25,8 @@ The tables:
 
 | Table | What |
 | --- | --- |
-| `stg_pos_events` | The copy. It reads `amount` from each event of the payment app: the message the app sends for each payment. |
+| `raw_pos_payments` | Raw: the payment app's events, as they land. An event is the message the app sends for each payment. |
+| `stg_pos_events` | The copy, the first dbt model on top of raw. It reads `amount` from each event. |
 | `stg_pos_payments` | The payments table. It fills an empty amount with the customer's last amount, or 0. |
 | `revenue_daily` | What the revenue dashboard and the finance close read. |
 | `payments_repeat_rate` | Per day: how many payments equal the customer's previous one. |

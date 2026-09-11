@@ -7,8 +7,9 @@ The labs for Module 2. The case is the Frozen Payments from Module 1.
 On 1 June, the Jaffle Shop's payment app renamed the field `amount` to `amount_cents`. The copy kept reading `amount`, found nothing, and did not fail. The payments table then filled each empty amount with the customer's last amount, or with 0 for a new customer. Every test passed for seventeen days, and every amount was wrong.
 
 ```
-payment app ──► stg_pos_events ──► stg_pos_payments ──► revenue_daily ──► dashboard, finance close (month-end report)
-                (the copy)         (the payments table)                   the reorder agent reads the payments table too
+payment app ──► raw_pos_payments ──► stg_pos_events ──► stg_pos_payments ──► revenue_daily ──► dashboard, finance close
+                (raw: the events,     (the copy)         (the payments table)                   (month-end report)
+                 as they land)                            the reorder agent reads the payments table too
 ```
 
 ## Before the day
