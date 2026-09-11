@@ -1,8 +1,8 @@
 # Lab 2 · A gate on the copy
 
-**10 minutes** · Switch on a contract, so the copy stops when the amount is missing.
-
-> This page stays on the left. Click a file name to open it on the right.
+> **10 minutes** · **Goal:** a contract that stops the copy when the amount is missing.<br>
+> **You write:** the gate switched on, and two new promises.<br>
+> **Done when:** `uv run tools/check.py 2` says `4 of 4 done. Well done.` Then switch it off again.
 
 ### 1 · Read the file
 
@@ -23,13 +23,13 @@ models:
 
 | Line | What it means |
 | --- | --- |
-| `- name: stg_pos_events` | The copy: the model that reads the payment app's events every night. An event is the message the app sends for each payment. A model is a SQL file that dbt turns into a table. |
-| `enforced: false` | The contract is off. When it is `true`, dbt checks every promise when it builds the copy. |
+| `- name: stg_pos_events` | The copy: it reads the payment app's events every night. An event is the message the app sends for each payment. |
+| `enforced: false` | The contract is off. With `true`, dbt checks every promise when it builds the copy. |
 | `- name: amount` | One promised column. |
 | `data_type: integer` | Its type: a whole number, in cents. |
 | `constraints:` / `- type: not_null` | A rule on the column: it can never be empty. |
 
-When the data breaks a promise, dbt stops the build. That is the gate. On 1 June, the app renamed `amount` to `amount_cents`, so the copy finds `amount` empty.
+When the data breaks a promise, dbt stops the build. That is the gate. On 1 June the app renamed `amount` to `amount_cents`, so the copy finds `amount` empty.
 
 ### 2 · Run the copy
 
@@ -37,7 +37,13 @@ When the data breaks a promise, dbt stops the build. That is the gate. On 1 June
 uv run dbt run --select stg_pos_events
 ```
 
-**You see:** `PASS=1`. The contract is off, so the empty amounts get through.
+```
+Done. PASS=1 WARN=0 ERROR=0 ...
+```
+
+The contract is off, so the empty amounts get through.
+
+---
 
 ### 3 · Your turn
 
@@ -46,15 +52,17 @@ uv run dbt run --select stg_pos_events
 - `payment_method` can never be empty, the same way as `amount`.
 - Every amount is above 0. This rule is not a `not_null`: it is the type `check`, with an `expression`.
 
-**Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule, with an example of each.
+> **Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule, with an example of each.
 
-Run the copy again:
+Run the copy again. It stops, and the error has this line:
 
 ```bash
 uv run dbt run --select stg_pos_events
 ```
 
-**You see:** `NOT NULL constraint failed ... amount`, in red. The gate stops the copy.
+```
+Constraint Error: NOT NULL constraint failed: stg_pos_events__dbt_tmp.amount
+```
 
 ### 4 · Check
 
@@ -62,7 +70,9 @@ uv run dbt run --select stg_pos_events
 uv run tools/check.py 2
 ```
 
-**You see:** `4 of 4 done. Well done.`
+```
+4 of 4 done. Well done.
+```
 
 ### 5 · Switch it off again
 
@@ -72,10 +82,15 @@ Change it back to `enforced: false`, and save. The next labs need the Frozen Pay
 uv run dbt run
 ```
 
-**You see:** `ERROR=0`. If you run `check.py 2` again now, it shows ✗ on "the contract is on". That is correct: it is off again.
+The last line has `ERROR=0`. Now `check.py 2` shows ✗ on "the contract is on", and `2 of 3 done`. That is correct: it is off again.
 
-### Extra
+---
 
-Promise that `payment_id` is never in the table twice. `check.py 2` shows it on the Extra line.
+### Extra (optional)
 
-**Stuck?** Later, `dbt run` shows `ERROR=1`: the contract is still on. Do step 5.
+Promise that `payment_id` is never in the table twice.
+
+### Stuck?
+
+- A ✗ line says what is wrong. Fix it, save (Cmd+S, or Ctrl+S on Windows), and check again.
+- Later, `dbt run` shows `ERROR=1`: the contract is still on. Do step 5.

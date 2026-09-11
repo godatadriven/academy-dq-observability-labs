@@ -98,8 +98,10 @@ def lab1() -> list[bool]:
              "There is no failing test with max_value 1000 on order_total yet." if not above
              else "Your test with 1000 does not fail."),
         show(mine == "FAIL 1", "Task 2: your query test finds the one order loaded before it was placed",
-             "tests/lab1_loaded_before_placed.sql has no query yet, or does not read orders_daily_extract." if not mine
-             else "tests/lab1_loaded_before_placed.sql does not run: dbt shows an error for it." if mine == "ERROR"
+             "tests/lab1_loaded_before_placed.sql has no query yet, or its from line does not use "
+             "{{ ref('orders_daily_extract') }}." if not mine
+             else "tests/lab1_loaded_before_placed.sql does not run. To see the error: "
+                  "uv run dbt test --select orders_daily_extract" if mine == "ERROR"
              else "tests/lab1_loaded_before_placed.sql runs, but returns no row." if mine == "PASS"
              else f"tests/lab1_loaded_before_placed.sql returns {mine.split()[1]} rows. Only one order is loaded before it is placed."),
     ]
@@ -187,6 +189,7 @@ def lab3b() -> list[bool]:
                        "where pay_date between '2026-05-17' and '2026-06-01'"))
     may = {day: rate for day, rate in rates.items() if day < "2026-06-01"}
     loud = [day for day, rate in may.items() if fail and rate > float(fail.group(1))]
+    leftover = re.search(r"repeat_rate\s*<", text) is not None and bool(fail or warn)
     warns = "WARNED" in scan("2026-05-20", "soda/lab3_repeat.yml")
     rings = "[FAILED]" in scan("2026-06-02", "soda/lab3_repeat.yml")
     checks = read_yaml("soda/lab3_checks.yml") or {}
@@ -200,14 +203,16 @@ def lab3b() -> list[bool]:
           "The freshness check has no warn and fail levels yet." if not levels
           else "The freshness check does not warn at 18:00 on 31 May, or it fails at 09:00.")
     return [
-        show(bool(fail) and not loud, "Task: quiet on every normal day in May",
-             "The check has no fail level yet." if not fail
+        show(bool(fail) and not loud and not leftover, "Task: no failure on any normal day in May",
+             "The check line still has a limit. Make it only `- repeat_rate:`." if leftover
+             else "The check has no fail level yet." if not fail
              else f"With a failure above {float(fail.group(1)):g}, it fails on the payments of normal days: "
                   f"{', '.join(loud[:3])}{f', and {len(loud) - 3} more' if len(loud) > 3 else ''}."),
         show(bool(fail) and rings, "Task: it fails on 2 June",
              "The check has no fail level yet." if not fail else "The check does not fail on 2 June."),
         show(bool(warn) and warns, "Task: it warns on 19 May's payments, the busiest normal day",
-             "The check has no warn level yet." if not warn else "The scan of 20 May gives no warning."),
+             "The check has no warn level yet." if not warn
+             else "The scan on the morning of 20 May (19 May's payments) gives no warning."),
     ]
 
 
