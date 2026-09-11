@@ -1,4 +1,4 @@
--- Lab 1 · Task B · Your query test. The steps: labs/lab1.md
+-- Lab 1 · Task 2 · Your query test. The steps: labs/lab1.md
 -- Rule: an order is not loaded before it is placed.
 -- Write a query below that returns the bad rows. No rows back means that the test passes.
 -- tests/lab1_updated_before_placed.sql shows the shape.

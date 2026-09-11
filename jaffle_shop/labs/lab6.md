@@ -47,7 +47,7 @@ The last ✓ line says if your check passes or fails, and on how many rows. A go
 
 ### Extra (optional)
 
-Write the same standard as the other kind too: a Soda check and a query test. To compare two tables in Soda, copy the query shape of `soda/lab3_repeat.yml`, with `${NOW}`.
+Write the same standard as the other kind too: a Soda check and a query test. To compare two tables in Soda, copy the query shape of `soda/lab3_repeat.yml`, with `${NOW}`. The name before `query:` must match the name in the check line. Either table can go after `checks for`.
 
 ### Stuck?
 

@@ -45,6 +45,8 @@ uv run mf query --metrics revenue --group-by metric_time__day --start-time 2026-
 2026-06-02T00:00:00     3799.3
 ```
 
+A message about a new version of MetricFlow can show too. Ignore it.
+
 ---
 
 ### 3 · Your turn
@@ -64,7 +66,7 @@ uv run dbt parse
 uv run mf query --metrics revenue,payments,average_payment --group-by metric_time__day --start-time 2026-06-01 --end-time 2026-06-01
 ```
 
-You see `4012.8`, `576`, and `6.96667`. A message about a new version of MetricFlow can show too. Ignore it.
+You see `4012.8`, `576`, and `6.96667`.
 
 ### 4 · Check
 

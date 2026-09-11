@@ -38,7 +38,7 @@ uv run dbt run --select stg_pos_events
 ```
 
 ```
-Done. PASS=1 WARN=0 ERROR=0
+Done. PASS=1 WARN=0 ERROR=0 ...
 ```
 
 The contract is off, so the empty amounts get through.
@@ -54,7 +54,7 @@ The contract is off, so the empty amounts get through.
 
 > **Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule, with an example of each.
 
-Run the copy again. It stops, in red:
+Run the copy again. It stops, and the error has this line:
 
 ```bash
 uv run dbt run --select stg_pos_events
@@ -82,7 +82,7 @@ Change it back to `enforced: false`, and save. The next labs need the Frozen Pay
 uv run dbt run
 ```
 
-The last line has `ERROR=0`. Now `check.py 2` shows ✗ on "the contract is on". That is correct: it is off again.
+The last line has `ERROR=0`. Now `check.py 2` shows ✗ on "the contract is on", and `2 of 3 done`. That is correct: it is off again.
 
 ---
 

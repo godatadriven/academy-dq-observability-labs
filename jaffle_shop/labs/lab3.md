@@ -74,6 +74,14 @@ uv run tools/check.py 3a
 
 Open [`soda/lab3_repeat.yml`](../soda/lab3_repeat.yml). It is Module 1's rule: ring when too many payments repeat the customer's last amount.
 
+```yaml
+checks for payments_repeat_rate:
+  - repeat_rate < 5:
+      repeat_rate query: |
+        select repeat_rate_pct from payments_repeat_rate where ...
+      name: "distribution: payments do not repeat the customer's last amount"
+```
+
 | Line | What it means |
 | --- | --- |
 | `checks for payments_repeat_rate:` | A table with one row per day: the percent of payments that repeat the customer's last amount. |
@@ -106,7 +114,7 @@ One limit is not enough: a normal day can repeat 10%, and 2 June repeats 100%.
 - a **warning** when more than 10% repeat: someone looks at it,
 - a **failure** when more than 20% repeat, Module 1's one in five: the line stops.
 
-A check with two levels has no limit in its check line. The line is only `- repeat_rate:`. Put `warn:` and `fail:` under it, next to `repeat_rate query:` and `name:`.
+A check with two levels has no limit in its check line. Change the line to only `- repeat_rate:`. Then put `warn:` and `fail:` straight under it, six spaces in, the same as `name:`. Not inside the SQL.
 
 > **Hint:** Soda's page on [alert configurations](https://docs.soda.io/soda-cl/optional-config.html), with `warn: when > ...` and `fail: when > ...`.
 
@@ -132,7 +140,7 @@ The last line starts with `Oops! 2 failures.` Your checks catch the Frozen Payme
 
 ### Extra (optional)
 
-Give the freshness check two levels too: a warning when the newest load is more than 12 hours old, and a failure after 1 day.
+Give the freshness check two levels too: a warning when the newest load is more than 12 hours old, and a failure after 1 day. Soda writes these as `12h` and `1d`.
 
 ### Stuck?
 

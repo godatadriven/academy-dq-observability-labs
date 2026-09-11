@@ -1,6 +1,6 @@
 # Lab 1 · Six defects, six tests
 
-> **20 minutes** · **Goal:** catch Module 1's six defects with dbt tests.<br>
+> **15 minutes** · **Goal:** catch Module 1's six defects with dbt tests.<br>
 > **You write:** a range test, and a query test.<br>
 > **Done when:** `uv run tools/check.py 1` says `3 of 3 done. Well done.`
 
@@ -38,10 +38,10 @@ The sixth test is a query: [`tests/lab1_updated_before_placed.sql`](../tests/lab
 uv run dbt test --select orders_daily_extract
 ```
 
-You see six lines with `FAIL 1`, and this last line, in red:
+You see six lines with `FAIL 1`. The last line starts like this:
 
 ```
-Done. PASS=0 WARN=0 ERROR=6
+Done. PASS=0 WARN=0 ERROR=6 ...
 ```
 
 Six failures is the goal: each test found its bad row. Do not fix the data.
