@@ -23,7 +23,7 @@ models:
 
 | Line | What it means |
 | --- | --- |
-| `- name: stg_pos_events` | The copy: it reads the payment app's events every night. An event is the message the app sends for each payment. |
+| `- name: stg_pos_events` | The copy: the first dbt model. Every night it reads the payment app's events from raw, where they land as they are. An event is the message the app sends for each payment. |
 | `enforced: false` | The contract is off. With `true`, dbt checks every promise when it builds the copy. |
 | `- name: amount` | One promised column. |
 | `data_type: integer` | Its type: a whole number, in cents. |
