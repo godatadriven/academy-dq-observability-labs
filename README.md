@@ -12,6 +12,20 @@ payment app ──► raw_pos_payments ──► stg_pos_events ──► stg_po
                  as they land)                            the reorder agent reads the payments table too
 ```
 
+## Required before the day
+
+You must know these. The day does not teach SQL or dbt, and without them the labs are very hard to follow.
+
+- **SQL:** you can read and write SELECT, WHERE, JOIN, and GROUP BY.
+- **dbt:** you know what a model is, and what `ref()`, `dbt run`, and `dbt test` do.
+- **A terminal and YAML:** you can run a command, and read a YAML file. `basics.md` shows both.
+- **Module 1:** you took part in it. The labs replay its case.
+
+New to SQL or dbt? Do one of these before the day. Both are free.
+
+- SQL: [SQLBolt](https://sqlbolt.com/), lessons 1 to 11.
+- dbt: [dbt Fundamentals](https://learn.getdbt.com/courses/dbt-fundamentals).
+
 ## Before the day
 
 1. Follow `setup-guide.md`: open the labs in GitHub Codespaces, VS Code in your browser, in about 10 minutes.
@@ -44,3 +58,6 @@ Your codespace opens on the Lab 1 page. A new terminal starts in `jaffle_shop/`.
 | Check | A Soda rule about a table. |
 | Scan | Soda runs your checks once. |
 | The payments table | `stg_pos_payments`. Every lab looks at it. |
+| pos | Point of sale: the payment app in the cafés. |
+| `raw_` | The start of a table name in raw: the data as it landed. |
+| `stg_` | The start of a table name in staging: cleaned by dbt. |
