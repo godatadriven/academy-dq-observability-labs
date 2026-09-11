@@ -23,7 +23,7 @@ models:
 
 | Line | What it means |
 | --- | --- |
-| `- name: stg_pos_events` | The copy: the model that reads the payment app's events every night. A model is a SQL file that dbt turns into a table. |
+| `- name: stg_pos_events` | The copy: the model that reads the payment app's events every night. An event is the message the app sends for each payment. A model is a SQL file that dbt turns into a table. |
 | `enforced: false` | The contract is off. When it is `true`, dbt checks every promise when it builds the copy. |
 | `- name: amount` | One promised column. |
 | `data_type: integer` | Its type: a whole number, in cents. |
