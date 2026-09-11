@@ -37,9 +37,10 @@ uv run dbt ls --select stg_pos_payments+ --resource-type exposure
 
 ### 3 · Your turn
 
-**Task A.** The agent's owner is `nobody`. Give it a person as owner.
+**Task.** Every reader needs a person as owner, and one reader is missing:
 
-**Task B.** Add a fourth reader: the weekly email to the café managers. It reads `revenue_daily`, and a person owns it. Add it at the end of the file, after an empty line.
+- The agent's owner is `nobody`. Give it a person.
+- Add a fourth reader: the weekly email to the café managers. It reads `revenue_daily`, and a person owns it. Add it at the end of the file, after an empty line.
 
 **Hint:** dbt's page on [exposures](https://docs.getdbt.com/docs/build/exposures) lists every field. For the type, an email is an `application`.
 

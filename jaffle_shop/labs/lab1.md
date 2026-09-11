@@ -41,11 +41,28 @@ uv run dbt test --select orders_daily_extract
 
 ### 3 · Your turn
 
-**Task A.** Finance says: no order is above €1,000. Add a second test under `order_total` for that rule. Keep the first test.
+**Task 1 · A range.** Finance says: no order is above €1,000. Add a second test under `order_total` for that rule. Keep the first test.
 
-**Task B.** An order cannot be loaded before it is placed. Write that rule as a query test in [`tests/lab1_loaded_before_placed.sql`](../tests/lab1_loaded_before_placed.sql). The columns are `order_date` (placed) and `_loaded_at` (loaded).
+**Hint:** the test on `order_total` now is [`expect_column_values_to_be_between`](https://github.com/metaplane/dbt-expectations#expect_column_values_to_be_between). It takes a `min_value`, a `max_value`, or both. In our file, the settings go under `arguments:`.
 
-**Hint:** Task A uses the same test as the one on `order_total` now: [`expect_column_values_to_be_between`](https://github.com/metaplane/dbt-expectations#expect_column_values_to_be_between). It takes a `min_value`, a `max_value`, or both. In our file, the settings go under `arguments:`. For Task B, dbt's page on [singular tests](https://docs.getdbt.com/docs/build/data-tests) shows the shape.
+**Task 2 · A query.** A query test is a SELECT that returns the bad rows. This one is in the file already, [`tests/lab1_updated_before_placed.sql`](../tests/lab1_updated_before_placed.sql):
+
+```sql
+select customer_id, order_date, updated_at
+from {{ ref('orders_daily_extract') }}
+where order_date > updated_at
+   or order_date > current_date
+```
+
+| Line | What it means |
+| --- | --- |
+| `select ...` | The columns to show for each bad row. |
+| `from {{ ref('orders_daily_extract') }}` | The table. `ref(...)` is how dbt names a table. |
+| `where ...` | The rule, turned around: keep only the rows that break it. |
+
+No rows back means that the test passes.
+
+Now write a new rule the same way: **an order is not loaded before it is placed.** The columns are `order_date` (placed) and `_loaded_at` (loaded). Write the query in [`tests/lab1_loaded_before_placed.sql`](../tests/lab1_loaded_before_placed.sql), under the comments.
 
 ### 4 · Check
 
@@ -53,7 +70,7 @@ uv run dbt test --select orders_daily_extract
 uv run tools/check.py 1
 ```
 
-**You see:** `3 of 3 done. Well done.` Your Task A test fails on C-1045, an order of €1,310. Your Task B test fails on the order placed in 2027.
+**You see:** `3 of 3 done. Well done.` Your range test fails on C-1045, an order of €1,310. Your query fails on the order placed in 2027.
 
 ### Extra
 

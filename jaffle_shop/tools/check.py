@@ -94,10 +94,10 @@ def lab1() -> list[bool]:
     return [
         show(not missing, "Module 1's six defects: six tests fail",
              f"Gone, or not failing now: {', '.join(missing)}."),
-        show(any(a.startswith("FAIL") for a in above), "Task A: a test that no order is above 1,000, failing on C-1045",
+        show(any(a.startswith("FAIL") for a in above), "Task 1: a test that no order is above 1,000, failing on C-1045",
              "There is no failing test with max_value 1000 on order_total yet." if not above
              else "Your test with 1000 does not fail."),
-        show(mine == "FAIL 1", "Task B: your query test finds the one order loaded before it was placed",
+        show(mine == "FAIL 1", "Task 2: your query test finds the one order loaded before it was placed",
              "tests/lab1_loaded_before_placed.sql has no query yet, or does not read orders_daily_extract." if not mine
              else "tests/lab1_loaded_before_placed.sql does not run: dbt shows an error for it." if mine == "ERROR"
              else "tests/lab1_loaded_before_placed.sql runs, but returns no row." if mine == "PASS"
@@ -120,9 +120,9 @@ def lab2() -> list[bool]:
     extra(any(k.get("type") in ("primary_key", "unique") for k in columns.get("payment_id", [])),
           "payment_id is never in twice", "payment_id has no primary_key or unique rule yet.")
     results = [
-        show(on, "Task A: the contract is on", "enforced is not true."),
-        show(method, "Task A: payment_method can never be empty", "payment_method has no not_null rule yet."),
-        show(above, "Task B: every amount is above 0", "amount has no check rule with 'amount > 0' yet."),
+        show(on, "Task: the contract is on", "enforced is not true."),
+        show(method, "Task: payment_method can never be empty", "payment_method has no not_null rule yet."),
+        show(above, "Task: every amount is above 0", "amount has no check rule with 'amount > 0' yet."),
     ]
     if on:
         out = run("dbt", "run", "--select", "stg_pos_events")
@@ -140,7 +140,11 @@ def lab2() -> list[bool]:
 # Lab 3 · Soda checks
 
 def scan(now: str, *files: str) -> str:
-    return run("soda", "scan", "-d", "jaffle_shop", "-c", "soda/configuration.yml", "-v", f"NOW={now} 09:00:00", *files)
+    return scan_at(f"{now} 09:00:00", *files)
+
+
+def scan_at(moment: str, *files: str) -> str:
+    return run("soda", "scan", "-d", "jaffle_shop", "-c", "soda/configuration.yml", "-v", f"NOW={moment}", *files)
 
 
 def failed_names(out: str) -> list[str]:
@@ -166,8 +170,8 @@ def lab3a() -> list[bool]:
           "every payment method is one of the four known ones",
           "There is no invalid_count check on payment_method with valid values yet.")
     return [
-        show(customer, "Task A: every payment has a customer", "There is no missing_count check on customer_id yet."),
-        show(twice, "Task B: no payment is in twice", "There is no duplicate_count check on payment_id yet."),
+        show(customer, "Task: every payment has a customer", "There is no missing_count check on customer_id yet."),
+        show(twice, "Task: no payment is in twice", "There is no duplicate_count check on payment_id yet."),
         show(passed, "All checks pass on 31 May",
              f"This check fails on 31 May: {', '.join(failed_names(out))}." if failed_names(out)
              else "Soda cannot read soda/lab3_checks.yml."),
@@ -177,26 +181,33 @@ def lab3a() -> list[bool]:
 def lab3b() -> list[bool]:
     text = "\n".join(line for line in open("soda/lab3_repeat.yml").read().splitlines()
                      if not line.strip().startswith("#"))
-    match = re.search(r"repeat_rate\s*<=?\s*([0-9.]+)", text) or re.search(r"fail:\s*when\s*>=?\s*([0-9.]+)", text)
-    limit = float(match.group(1)) if match else None
+    fail = re.search(r"fail:\s*when\s*>=?\s*([0-9.]+)", text)
+    warn = re.search(r"warn:\s*when\s*>=?\s*([0-9.]+)", text)
     rates = dict(query("select pay_date::varchar, repeat_rate_pct from payments_repeat_rate "
                        "where pay_date between '2026-05-17' and '2026-06-01'"))
     may = {day: rate for day, rate in rates.items() if day < "2026-06-01"}
-    loud = [day for day, rate in may.items() if limit is not None and rate >= limit]
+    loud = [day for day, rate in may.items() if fail and rate > float(fail.group(1))]
     warns = "WARNED" in scan("2026-05-20", "soda/lab3_repeat.yml")
-    quiet = "All is good" in scan("2026-05-31", "soda/lab3_repeat.yml")
     rings = "[FAILED]" in scan("2026-06-02", "soda/lab3_repeat.yml")
-    extra("warn:" in text and warns and quiet and rings,
-          "a warning on 19 May's payments, a failure on 2 June",
-          "There is no warn level yet." if "warn:" not in text
-          else "The scan of 20 May does not warn, or 31 May is not quiet, or 2 June does not fail.")
+    checks = read_yaml("soda/lab3_checks.yml") or {}
+    fresh = next((c for c in checks.get("checks for stg_pos_payments", []) or []
+                  if isinstance(c, dict) and str(list(c)[0]).strip().startswith("freshness")), {})
+    fresh_cfg = list(fresh.values())[0] if fresh else {}
+    levels = isinstance(fresh_cfg, dict) and "warn" in fresh_cfg and "fail" in fresh_cfg
+    extra(levels and "WARNED" in scan_at("2026-05-31 18:00:00", "soda/lab3_checks.yml")
+          and "All is good" in scan("2026-05-31", "soda/lab3_checks.yml"),
+          "freshness warns after 12 hours, and fails after 1 day",
+          "The freshness check has no warn and fail levels yet." if not levels
+          else "The freshness check does not warn at 18:00 on 31 May, or it fails at 09:00.")
     return [
-        show(limit is not None and not loud, "Task: quiet on every normal day in May",
-             "There is no limit in soda/lab3_repeat.yml." if limit is None
-             else f"With a limit of {limit:g}, it rings on the payments of normal days: "
+        show(bool(fail) and not loud, "Task: quiet on every normal day in May",
+             "The check has no fail level yet." if not fail
+             else f"With a failure above {float(fail.group(1)):g}, it fails on the payments of normal days: "
                   f"{', '.join(loud[:3])}{f', and {len(loud) - 3} more' if len(loud) > 3 else ''}."),
-        show(limit is not None and rates["2026-06-01"] >= limit, "It rings on 2 June",
-             f"With a limit of {limit:g}, 2 June stays green." if limit else ""),
+        show(bool(fail) and rings, "Task: it fails on 2 June",
+             "The check has no fail level yet." if not fail else "The check does not fail on 2 June."),
+        show(bool(warn) and warns, "Task: it warns on 19 May's payments, the busiest normal day",
+             "The check has no warn level yet." if not warn else "The scan of 20 May gives no warning."),
     ]
 
 
@@ -216,12 +227,12 @@ def lab4a() -> list[bool]:
           "the weekly email reads revenue_daily and bank_deposits",
           "The weekly email does not read bank_deposits yet.")
     return [
-        show(person((agent.get("owner") or {}).get("name")), "Task A: the agent has a person as owner",
+        show(person((agent.get("owner") or {}).get("name")), "Task: the agent has a person as owner",
              "The agent's owner is not a person's name yet."),
-        show(bool(email), "Task B: a fourth reader, the weekly email, reads revenue_daily",
+        show(bool(email), "Task: a fourth reader, the weekly email, reads revenue_daily",
              "There is no fourth exposure that reads revenue_daily yet."),
         show(bool(email) and all(person((e.get("owner") or {}).get("name")) for e in email),
-             "Task B: the weekly email has a person as owner", "The new exposure has no person's name as owner."),
+             "Task: the weekly email has a person as owner", "The new exposure has no person's name as owner."),
         show(out.count("exposure:") >= 4, "dbt lists four readers",
              "dbt lists " + str(out.count("exposure:")) + " readers. It cannot read the file, or a reader is missing."),
     ]
@@ -263,10 +274,10 @@ def lab5() -> list[bool]:
           "mf cannot group revenue by payment__payment_method yet.")
     return [
         show("4012.8" in ask("revenue"), "The metric revenue gives 4,012.80 for 1 June", wrong("revenue", "4,012.80")),
-        show(re.search(r"\b576\b", ask("payments")) is not None, "Task A: the metric payments gives 576 for 1 June",
+        show(re.search(r"\b576\b", ask("payments")) is not None, "Task 1: the metric payments gives 576 for 1 June",
              wrong("payments", "576")),
         show(re.search(r"\b6\.96", ask("average_payment")) is not None,
-             "Task B: the metric average_payment gives 6.97 for 1 June", wrong("average_payment", "6.97")),
+             "Task 2: the metric average_payment gives 6.97 for 1 June", wrong("average_payment", "6.97")),
     ]
 
 

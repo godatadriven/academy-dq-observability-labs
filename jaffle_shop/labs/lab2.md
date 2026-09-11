@@ -41,11 +41,12 @@ uv run dbt run --select stg_pos_events
 
 ### 3 · Your turn
 
-**Task A.** Switch the contract on. Then promise that `payment_method` can never be empty, the same way as `amount`.
+**Task.** Switch the contract on, and add two promises:
 
-**Task B.** Promise that every amount is above 0. This rule is new: it is not a `not_null`.
+- `payment_method` can never be empty, the same way as `amount`.
+- Every amount is above 0. This rule is not a `not_null`: it is the type `check`, with an `expression`.
 
-**Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule. Task B uses the type `check`, with an `expression`.
+**Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule, with an example of each.
 
 Run the copy again:
 

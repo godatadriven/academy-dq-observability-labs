@@ -1,6 +1,6 @@
 # Lab 3 · Checks on the payments table
 
-**Part A 15 minutes, Part B 10 minutes** · Write Soda checks, and set a limit that catches the Frozen Payments.
+**Part A 15 minutes, Part B 10 minutes** · Write Soda checks, and set the levels that catch the Frozen Payments.
 
 > This page stays on the left. Click a file name to open it on the right.
 
@@ -38,13 +38,14 @@ uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:
 
 ### 3 · Your turn
 
-Add two checks at the end of the file. Put the dash of each new check under the other dashes: two spaces in.
+**Task.** Add two checks at the end of the file, each with a name:
 
-**Task A.** Every payment has a customer: `customer_id` is never empty.
+- Every payment has a customer: `customer_id` is never empty.
+- No payment is in the table twice: `payment_id` never repeats.
 
-**Task B.** No payment is in the table twice: `payment_id` never repeats.
+Put the dash of each new check under the other dashes: two spaces in.
 
-**Hint:** Soda's pages on [missing metrics](https://docs.soda.io/soda-cl/missing-metrics.html) (Task A) and [numeric metrics](https://docs.soda.io/soda-cl/numeric-metrics.html) (Task B, look for `duplicate_count`).
+**Hint:** Soda's pages on [missing metrics](https://docs.soda.io/soda-cl/missing-metrics.html) and [numeric metrics](https://docs.soda.io/soda-cl/numeric-metrics.html) (look for `duplicate_count`).
 
 ### 4 · Check
 
@@ -82,7 +83,14 @@ uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-26 09:
 
 ### 7 · Your turn
 
-**Task.** Change the limit so that the check is quiet on every normal day in May, and rings on 2 June. Module 1's example standard was one in five.
+One limit is not enough. A normal day can repeat 10% of the amounts, and 2 June repeats 100%. Give the check two levels:
+
+- a **warning** when more than 10% of the payments repeat: someone looks at it,
+- a **failure** when more than 20% repeat, Module 1's standard of one in five: the line stops.
+
+In Soda, a check with two levels has no limit in its check line. The line is only `- repeat_rate:`, with `warn:` and `fail:` under it, next to `repeat_rate query:` and `name:`.
+
+**Hint:** Soda's page on [alert configurations](https://docs.soda.io/soda-cl/optional-config.html), with `warn: when > ...` and `fail: when > ...`.
 
 ### 8 · Check
 
@@ -90,7 +98,7 @@ uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-26 09:
 uv run tools/check.py 3b
 ```
 
-**You see:** `2 of 2 done. Well done.` A ✗ line names the day of the payments that your limit gets wrong.
+**You see:** `3 of 3 done. Well done.` A ✗ line names what your levels get wrong.
 
 ### 9 · Scan 2 June
 
@@ -102,6 +110,6 @@ uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-06-02 09:
 
 ### Extra
 
-Warn when more than 10% repeat, and fail when more than 20% repeat. A warning tells someone to look, and a failure stops the line. **Hint:** Soda's page on [alert configurations](https://docs.soda.io/soda-cl/optional-config.html), with `warn:` and `fail:`. Then the check line is only `- repeat_rate:`.
+Give the freshness check in `soda/lab3_checks.yml` two levels too: a warning when the newest load is more than 12 hours old, and a failure after 1 day. `check.py 3b` shows it on the Extra line.
 
 **Stuck?** `Configuration path ... does not exist`: open a new terminal (menu ☰ > Terminal > New Terminal).
