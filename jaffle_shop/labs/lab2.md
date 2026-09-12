@@ -1,8 +1,8 @@
-# Lab 2 · A gate on the staging model
+# Lab 2 · A data contract on the staging model
 
-> **10 minutes** · **Goal:** a data contract that stops the staging model when the amount is missing.<br>
-> **You write:** the data contract switched on, and two new rules.<br>
-> **Done when:** `uv run tools/check.py 2` says `4 of 4 done. Well done.` Then switch it off again.
+> **10 minutes** · **Goal:** a data contract that stops two bad changes: an empty amount, and an amount of the wrong type.<br>
+> **You write:** the data contract switched on, and a teammate's hotfix to test it.<br>
+> **Done when:** `uv run tools/check.py 2` says `3 of 3 done. Well done.` Then put both back.
 
 ### 1 · Read the file
 
@@ -29,7 +29,7 @@ models:
 | `data_type: integer` | Its type: a whole number, in cents. |
 | `constraints:` / `- type: not_null` | A rule on the column: it can never be empty. |
 
-When the data breaks a promise, dbt stops the build. That is the gate. On 1 June the app renamed `amount` to `amount_cents`, so `stg_pos_events` finds `amount` empty.
+When the data breaks a promise, dbt stops the build. On 1 June the app renamed `amount` to `amount_cents`, so `stg_pos_events` finds `amount` empty.
 
 ### 2 · Build the staging model
 
@@ -47,22 +47,33 @@ The data contract is off, so the empty amounts get through.
 
 ### 3 · Your turn
 
-**Task.** Switch the data contract on, and add two rules:
-
-- `payment_method` can never be empty, the same way as `amount`.
-- Every amount is above 0. This rule is not a `not_null`: it is the type `check`, with an `expression`.
-
-> **Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule, with an example of each.
-
-Build it again. It stops, and the error has this line:
+**Task 1.** Switch the data contract on: `enforced: true`. Save, and build it again:
 
 ```bash
 uv run dbt run --select stg_pos_events
 ```
 
+It stops, and the error has this line. The empty amounts never land.
+
 ```
 Constraint Error: NOT NULL constraint failed: stg_pos_events__dbt_tmp.amount
 ```
+
+**Task 2.** A teammate sees the empty amounts and ships a quick hotfix: read `amount`, or else `amount_cents`. Open [`models/staging/stg_pos_events.sql`](../models/staging/stg_pos_events.sql). Replace line 10, the `amount` line, with their line:
+
+```sql
+    cast(coalesce(json_extract_string(event, '$.amount'), json_extract_string(event, '$.amount_cents')) as decimal(12, 2)) as amount,
+```
+
+Save, and build again. No amount is empty now, so a `not_null` test would pass. The data contract stops it anyway:
+
+```
+| amount      | DECIMAL(12,2)   | INTEGER       | data type mismatch |
+```
+
+The data contract promised whole cents. The hotfix gives decimals, and it mixes euros (`7.30`) with cents (`450`).
+
+> **Hint:** dbt's page on [model contracts](https://docs.getdbt.com/docs/mesh/govern/model-contracts) explains what dbt compares before it builds.
 
 ### 4 · Check
 
@@ -71,18 +82,24 @@ uv run tools/check.py 2
 ```
 
 ```
-4 of 4 done. Well done.
+3 of 3 done. Well done.
 ```
 
-### 5 · Switch it off again
+### 5 · Put both back
 
-Change it back to `enforced: false`, and save. The next labs need the Frozen Payments in the table.
+Undo the hotfix, and switch the data contract off again. The next labs need the Frozen Payments in the table.
+
+```bash
+git checkout models/staging/stg_pos_events.sql
+```
+
+Change `enforced: true` back to `enforced: false`, and save. Then:
 
 ```bash
 uv run dbt run
 ```
 
-The last line has `ERROR=0`. Now `check.py 2` shows ✗ on "the data contract is on", and `2 of 3 done`. That is correct: it is off again.
+The last line has `ERROR=0`. Now `check.py 2` shows ✗ lines. That is correct: both are back.
 
 ---
 
@@ -93,4 +110,4 @@ Promise that `payment_id` is never in the table twice.
 ### Stuck?
 
 - A ✗ line says what is wrong. Fix it, save (Cmd+S, or Ctrl+S on Windows), and check again.
-- Later, `dbt run` shows `ERROR=1`: the data contract is still on. Do step 5.
+- Later, `dbt run` shows `ERROR=1`: the data contract is still on, or the hotfix is still in. Do step 5.

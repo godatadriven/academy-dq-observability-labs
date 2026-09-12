@@ -1,7 +1,7 @@
 # Lab 5 · One definition of revenue
 
 > **12 minutes** · **Goal:** revenue defined once, in a semantic layer, so every reader gets the same number.<br>
-> **You write:** two metrics, `payments` and `average_payment`.<br>
+> **You write:** two metrics, `payments` and `revenue_minus_bank`.<br>
 > **Done when:** `uv run tools/check.py 5` says `3 of 3 done. Well done.`
 
 ### 1 · Read the file
@@ -29,7 +29,7 @@ metrics:
 | `- name: revenue` | The metric: the name that every reader asks for. |
 | `type: simple` / `measure: amount_eur` | A simple metric is one measure. Here, revenue is the sum of the amounts. |
 
-The file has a second measure too: `payment_count`, one for each payment.
+The file has a second measure too: `payment_count`, one for each payment. And it has the bank: a semantic model on `bank_deposits`, and the metric `bank`, what the bank received each day.
 
 ### 2 · Ask for revenue
 
@@ -55,18 +55,18 @@ Add two metrics under `revenue`, where the comment says "Your turn".
 
 **Task 1.** `payments`: the number of payments on a day.
 
-**Task 2.** `average_payment`: revenue divided by payments.
+**Task 2.** `revenue_minus_bank`: revenue minus what the bank received. On a right day, it is 0.
 
-> **Hint:** Task 1 has the same shape as `revenue`, with the other measure. Copy the shape in our file, not the one on dbt's page. Task 2 is a [ratio metric](https://docs.getdbt.com/docs/build/ratio): it divides one metric by another.
+> **Hint:** Task 1 has the same shape as `revenue`, with the other measure. Copy the shape in our file, not the one on dbt's page. Task 2 is a [derived metric](https://docs.getdbt.com/docs/build/derived): it makes a new number from other metrics, with `expr:`. Round it to cents: `round(revenue - bank, 2)`.
 
 After a change, let dbt read the file, then ask again:
 
 ```bash
 uv run dbt parse
-uv run mf query --metrics revenue,payments,average_payment --group-by metric_time__day --start-time 2026-06-01 --end-time 2026-06-01
+uv run mf query --metrics revenue,bank,revenue_minus_bank --group-by metric_time__day --start-time 2026-05-31 --end-time 2026-06-01
 ```
 
-You see `4012.8`, `576`, and `6.96667`.
+On 31 May, `revenue_minus_bank` is `0`. On 1 June it is `-1317.2`: the gap that Sam found, on the first day.
 
 ### 4 · Check
 
@@ -82,7 +82,7 @@ uv run tools/check.py 5
 
 ### Extra (optional)
 
-Ask for revenue by payment method. Add `payment_method` as a dimension of the semantic model, next to `paid_at`: it is `categorical` (dbt's page on [dimensions](https://docs.getdbt.com/docs/build/dimensions)). Then run `uv run dbt parse`, and ask:
+Ask for revenue by payment method. Add `payment_method` as a dimension of the semantic model, next to `paid_at`: it is `categorical` (dbt's page on [dimensions](https://docs.getdbt.com/docs/build/dimensions)). Then run `uv run dbt parse`, and ask. The name starts with the entity, `payment`, and two underscores:
 
 ```bash
 uv run mf query --metrics revenue --group-by payment__payment_method --start-time 2026-06-01 --end-time 2026-06-01

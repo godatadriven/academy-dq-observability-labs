@@ -1,4 +1,4 @@
-# Lab 2 · A gate on the staging model: a data contract. The steps: labs/lab2.md
+# Lab 2 · A data contract on the staging model. The steps: labs/lab2.md
 # The data contract lists the columns that stg_pos_events promises. not_null: amount can never be empty.
 version: 2
 models:

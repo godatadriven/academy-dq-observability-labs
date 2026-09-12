@@ -116,28 +116,27 @@ def lab2() -> list[bool]:
     model = contract["models"][0]
     columns = {c["name"]: [k for k in (c.get("constraints") or [])] for c in model.get("columns", [])}
     on = (model.get("config") or {}).get("contract", {}).get("enforced") is True
-    method = any(k.get("type") == "not_null" for k in columns.get("payment_method", []))
-    above = any(k.get("type") == "check" and re.search(r"amount\s*(>\s*0|>=\s*1)\b", str(k.get("expression", "")))
-                for k in columns.get("amount", []))
+    hotfix = "amount_cents" in Path("models/staging/stg_pos_events.sql").read_text()
     extra(any(k.get("type") in ("primary_key", "unique") for k in columns.get("payment_id", [])),
           "payment_id is never in twice", "payment_id has no primary_key or unique rule yet.")
     results = [
-        show(on, "Task: the data contract is on", "enforced is not true."),
-        show(method, "Task: payment_method can never be empty", "payment_method has no not_null rule yet."),
-        show(above, "Task: every amount is above 0", "amount has no check rule with 'amount > 0' yet."),
+        show(on, "Task 1: the data contract is on", "enforced is not true."),
+        show(hotfix, "Task 2: the teammate's hotfix is in models/staging/stg_pos_events.sql",
+             "Line 10 does not read amount_cents yet."),
     ]
-    if on:
+    if on and hotfix:
         out = run("dbt", "run", "--select", "stg_pos_events")
-        stops = "NOT NULL constraint failed" in out and ".amount" in out
-        if "Constraint Error" in out:
-            wrong = "The build stops on another rule, not on the empty amount."
-        elif "ERROR=0" in out:
-            wrong = "stg_pos_events builds: nothing stops it."
+        stops = "data type mismatch" in out and "amount" in out
+        if "ERROR=0" in out:
+            wrong = "stg_pos_events builds: nothing stops the hotfix."
         else:
-            wrong = "dbt cannot build stg_pos_events: " + next((l.strip() for l in out.splitlines() if "Error" in l), "")
-        results.append(show(stops, "The gate stops stg_pos_events on the 1 June events", wrong))
+            wrong = "The build stops, but not on the type of amount: " + next(
+                (l.strip() for l in out.splitlines() if "Error" in l or "mismatch" in l), "")
+        results.append(show(stops, "The data contract stops the hotfix: amount is a decimal, not whole cents", wrong))
+    else:
+        results.append(show(False, "The data contract stops the hotfix: amount is a decimal, not whole cents",
+                            "Do Task 1 and Task 2 first."))
     return results
-
 
 # Lab 3 · Soda checks
 
@@ -154,31 +153,30 @@ def failed_names(out: str) -> list[str]:
 
 
 def lab3a() -> list[bool]:
-    checks = read_yaml("soda/lab3_checks.yml")
-    if checks is None:
+    raw = read_yaml("soda/lab3_raw.yml")
+    if raw is None:
         return [False]
-    items = checks.get("checks for stg_pos_payments", []) or []
-    lines = {str(list(c)[0] if isinstance(c, dict) else c): (list(c.values())[0] if isinstance(c, dict) else {})
-             for c in items}
-
-    def has(pattern: str) -> bool:
-        return any(re.search(pattern, line) for line in lines)
-    customer = has(r"missing_count\(\s*customer_id\s*\)\s*=\s*0")
-    twice = has(r"duplicate_count\(\s*payment_id\s*\)\s*=\s*0")
-    out = scan("2026-05-31", "soda/lab3_checks.yml")
-    passed = "All is good" in out
-    method = next((cfg for line, cfg in lines.items() if re.search(r"invalid_count\(\s*payment_method\s*\)", line)), None)
-    extra(method is not None and "valid values" in (method or {}) and passed,
-          "every payment method is one of the four known ones",
-          "There is no invalid_count check on payment_method with valid values yet.")
+    items = raw.get("checks for raw_pos_payments", []) or []
+    placeholder = re.search(r"^\s*and\s+false\s*$", open("soda/lab3_raw.yml").read(), re.M) is not None
+    given = scan("2026-05-31", "soda/lab3_checks.yml")
+    may = scan("2026-05-31", "soda/lab3_raw.yml")
+    june = scan("2026-06-02", "soda/lab3_raw.yml")
+    runs = "All is good" in may or "[FAILED]" in may
+    volume = any(isinstance(c, dict) and str(list(c)[0]).strip().startswith("row_count") for c in items)
+    extra(volume and "All is good" in may, "the raw events: a normal night of events arrived",
+          "There is no row_count check in soda/lab3_raw.yml yet." if not volume else "The volume check fails on 31 May.")
     return [
-        show(customer, "Task: every payment has a customer", "There is no missing_count check on customer_id yet."),
-        show(twice, "Task: no payment is in twice", "There is no duplicate_count check on payment_id yet."),
-        show(passed, "All checks pass on 31 May",
-             f"This check fails on 31 May: {', '.join(failed_names(out))}." if failed_names(out)
+        show("All is good" in given, "The three checks in soda/lab3_checks.yml pass on 31 May",
+             f"This check fails on 31 May: {', '.join(failed_names(given))}." if failed_names(given)
              else "Soda cannot read soda/lab3_checks.yml."),
+        show(not placeholder and "All is good" in may, "Task: your check on the raw events passes on 31 May",
+             "The placeholder `and false` is still there." if placeholder
+             else "Soda cannot run soda/lab3_raw.yml." if not runs
+             else "It fails on 31 May: it counts events that do have an amount."),
+        show(not placeholder and "[FAILED]" in june, "Task: it fails on 2 June, on the events without an amount",
+             "The placeholder `and false` is still there." if placeholder
+             else "It passes on 2 June: the rule does not find the events without an amount."),
     ]
-
 
 def lab3b() -> list[bool]:
     text = "\n".join(line for line in open("soda/lab3_repeat.yml").read().splitlines()
@@ -210,7 +208,7 @@ def lab3b() -> list[bool]:
                   f"{', '.join(loud[:3])}{f', and {len(loud) - 3} more' if len(loud) > 3 else ''}."),
         show(bool(fail) and rings, "Task: it fails on 2 June",
              "The check has no fail level yet." if not fail else "The check does not fail on 2 June."),
-        show(bool(warn) and warns, "Task: it warns on 19 May's payments, the busiest normal day",
+        show(bool(warn) and warns, "Task: it warns on 19 May's payments, the highest normal day",
              "The check has no warn level yet." if not warn
              else "The scan on the morning of 20 May (19 May's payments) gives no warning."),
     ]
@@ -252,6 +250,9 @@ def lab4b() -> list[bool]:
         results.append(show("Yesterday's revenue" in run("python", "tools/agent_tools.py", "read", "2026-05-31"),
                             "31 May: the agent gets the revenue",
                             "The agent gets HOLD on a normal day: one of your Lab 3 checks fails on 31 May."))
+        results.append(show("Yesterday's revenue" in run("python", "tools/agent_tools.py", "read", "2026-05-20"),
+                            "20 May: your check warns, so the agent still gets the revenue",
+                            "The agent gets HOLD on 20 May: your Lab 3b check fails there. A warning must not stop it."))
     return results
 
 
@@ -281,8 +282,8 @@ def lab5() -> list[bool]:
         show("4012.8" in ask("revenue"), "The metric revenue gives 4,012.80 for 1 June", wrong("revenue", "4,012.80")),
         show(re.search(r"\b576\b", ask("payments")) is not None, "Task 1: the metric payments gives 576 for 1 June",
              wrong("payments", "576")),
-        show(re.search(r"\b6\.96", ask("average_payment")) is not None,
-             "Task 2: the metric average_payment gives 6.97 for 1 June", wrong("average_payment", "6.97")),
+        show("-1317.2" in ask("revenue_minus_bank"),
+             "Task 2: the metric revenue_minus_bank gives -1,317.20 for 1 June", wrong("revenue_minus_bank", "-1,317.20")),
     ]
 
 

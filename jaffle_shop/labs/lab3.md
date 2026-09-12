@@ -1,7 +1,7 @@
-# Lab 3 · Checks on the payments table
+# Lab 3 · Soda checks, from the raw events to the payments table
 
 > **Part A 15 minutes, Part B 10 minutes** · **Goal:** Soda checks that pass on a normal morning, and catch the Frozen Payments.<br>
-> **You write:** Part A, two checks. Part B, a warning level and a failure level.<br>
+> **You write:** Part A, one check on the raw events. Part B, a warning level and a failure level.<br>
 > **Done when:** `uv run tools/check.py 3a`, then `uv run tools/check.py 3b`, say `Well done.`
 
 ## Part A · A normal morning
@@ -20,7 +20,7 @@ checks for stg_pos_payments:
 | Line | What it means |
 | --- | --- |
 | `checks for stg_pos_payments:` | The table that Soda scans: the payments table. |
-| `- freshness(_etl_loaded_at) < 1d:` | The check: what must be true. Here, the newest load is less than one day old. |
+| `- freshness(_etl_loaded_at) < 1d:` | The check: what must be true. Here, the newest load is less than one day older than `NOW`, the morning of the scan. |
 | `name:` | The rule in words. The scan prints it. |
 | `filter:` | Which rows to look at: only what was loaded before `NOW`. |
 
@@ -43,14 +43,37 @@ All is good. No failures. No warnings. No errors.
 
 ### 3 · Your turn
 
-**Task.** Add two checks at the end of the file, each with a name:
+The payment team owns the raw events: the messages from the payment app, before any dbt model. They load them with their own sync, not with dbt, so no dbt test looks at them. Soda can check their table anyway. In the sandbox, a dbt seed stands in for their sync.
 
-- Every payment has a customer: `customer_id` is never empty.
-- No payment is in the table twice: `payment_id` never repeats.
+Open [`soda/lab3_raw.yml`](../soda/lab3_raw.yml). It holds one check, with its shape ready:
 
-Put the dash of each new check under the other dashes: two spaces in.
+```yaml
+checks for raw_pos_payments:
+  - events_without_amount = 0:
+      events_without_amount query: |
+        select count(*)
+        from raw_pos_payments
+        where paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
+          and false
+      name: "raw: every event of yesterday has an amount"
+```
 
-> **Hint:** Soda's pages on [missing metrics](https://docs.soda.io/soda-cl/missing-metrics.html) and [numeric metrics](https://docs.soda.io/soda-cl/numeric-metrics.html) (look for `duplicate_count`).
+| Line | What it means |
+| --- | --- |
+| `- events_without_amount = 0:` | The check: this number must be 0. You name the number yourself. |
+| `events_without_amount query:` | The SQL that gives the number. |
+| `where paid_at ...` | Only yesterday's events, the morning in `NOW`. |
+| `and false` | A placeholder: it counts nothing, so the check always passes. |
+
+**Task.** Replace `false` with the rule: the event has no `amount` field. Each event is a JSON text in the column `event`, like `{"customer": 3091, "amount": 7.30}`.
+
+> **Hint:** DuckDB reads one field from a JSON text with [`json_extract_string`](https://duckdb.org/docs/data/json/json_functions). A field that is not there comes back empty: `is null`.
+
+Scan 31 May, the day before the rename. Your check must pass: yesterday's events all have an amount.
+
+```bash
+uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-05-31 09:00:00" soda/lab3_raw.yml
+```
 
 ### 4 · Check
 
@@ -62,7 +85,7 @@ uv run tools/check.py 3a
 3 of 3 done. Well done.
 ```
 
-**Extra (optional).** Every payment method is one of `credit_card`, `coupon`, `bank_transfer`, `gift_card`. Soda's page on [validity metrics](https://docs.soda.io/soda-cl/validity-metrics.html) has `valid values`.
+**Extra (optional).** Add a second check to `soda/lab3_raw.yml`: last night brought between 500 and 700 events. The volume check in `soda/lab3_checks.yml` has the shape.
 
 > **Stop here.** Part B starts at the slide "Catch the Case".
 
@@ -107,7 +130,7 @@ On a normal day, 9.46% of the payments repeat. A limit of 5 is too tight.
 
 ### 7 · Your turn
 
-One limit is not enough: a normal day can repeat 10%, and 2 June repeats 100%.
+One limit is not enough: a normal day repeats 4 to 10%, and 2 June repeats 100%.
 
 **Task.** Give the check two levels:
 
@@ -128,13 +151,15 @@ uv run tools/check.py 3b
 3 of 3 done. Well done.
 ```
 
+`check.py` also scans the morning of 20 May. That scan warns, on purpose. 19 May's rate, 10.26%, is high only because the sandbox starts on 17 May, so few payments have one before them. A warning asks someone to look. It is not an alarm.
+
 ### 9 · Scan 2 June
 
 ```bash
-uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-06-02 09:00:00" soda/lab3_checks.yml soda/lab3_repeat.yml
+uv run soda scan -d jaffle_shop -c soda/configuration.yml -v NOW="2026-06-02 09:00:00" soda/lab3_checks.yml soda/lab3_repeat.yml soda/lab3_raw.yml
 ```
 
-The last line starts with `Oops! 2 failures.` Your checks catch the Frozen Payments on the first morning.
+The last line starts with `Oops! 3 failures.` Your checks catch the Frozen Payments on the first morning: at the source, in the raw events, and in the payments table.
 
 ---
 

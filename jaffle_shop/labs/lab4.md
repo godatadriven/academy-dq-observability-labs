@@ -1,7 +1,7 @@
 # Lab 4 · Every reader, and checks in front of the agent
 
-> **Part A 12 minutes, Part B 12 minutes** · **Goal:** name every reader of the payments table, and stop the agent from reading bad data.<br>
-> **You write:** Part A, owners and a new reader. Part B, your checks in front of the agent.<br>
+> **Part A 12 minutes, Part B 8 minutes** · **Goal:** name every reader of the payments table, and stop the agent from reading bad data.<br>
+> **You write:** Part A, owners and a new reader. Part B, your checks in front of the agent, and a prediction.<br>
 > **Done when:** `uv run tools/check.py 4a`, then `uv run tools/check.py 4b`, say `Well done.`
 
 ## Part A · Every reader, named
@@ -88,7 +88,16 @@ It looks normal, but it is built from frozen amounts. The agent orders from it.
 
 Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the switch: `CHECKS_FIRST = False`. With `CHECKS_FIRST = True`, the agent first runs your Lab 3 checks for that morning. If a check fails, the agent gets HOLD instead of the revenue.
 
-**Task.** Set `CHECKS_FIRST = True`, and save.
+**Task 1.** Set `CHECKS_FIRST = True`, and save.
+
+**Task 2.** Predict with your partner, before you run: what does the agent get on the morning of 20 May, when your Lab 3b check warns? And on 2 June, when it fails? Then run both:
+
+```bash
+uv run python tools/agent_tools.py read 2026-05-20
+uv run python tools/agent_tools.py read 2026-06-02
+```
+
+A warning lets the agent read the revenue, so it orders. A failure gives HOLD, so it orders nothing.
 
 ### 7 · Check
 
@@ -97,12 +106,12 @@ uv run tools/check.py 4b
 ```
 
 ```
-3 of 3 done. Well done.
+4 of 4 done. Well done.
 ```
 
-The agent gets HOLD on 2 June. On the morning of 31 May, it still gets the revenue.
+The agent gets HOLD on 2 June. On 31 May and on 20 May, it still gets the revenue.
 
 ### Stuck?
 
 - A ✗ line says what is wrong. Fix it, save (Cmd+S, or Ctrl+S on Windows), and check again.
-- "31 May: ✗": one of your Lab 3 checks fails on a normal day. Check your Lab 3 levels.
+- "31 May: ✗" or "20 May: ✗": one of your Lab 3 checks fails on a normal day. Check your Lab 3 levels.

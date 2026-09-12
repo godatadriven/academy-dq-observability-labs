@@ -44,7 +44,7 @@ You see six lines with `FAIL 1`. The last line starts like this:
 Done. PASS=0 WARN=0 ERROR=6 ...
 ```
 
-Six failures is the goal: each test found its bad row. Do not fix the data.
+Six failures is the goal: each test found its bad row. dbt counts a failed test under `ERROR`. Do not fix the data.
 
 ---
 

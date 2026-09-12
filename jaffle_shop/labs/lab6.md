@@ -27,7 +27,7 @@ Both files hold a starter: a working check, written as comments.
 **Task.**
 
 1. Open [`labs/my_check.md`](my_check.md), and write the three answers, each on the line of its question.
-2. Open [`tests/my_check.sql`](../tests/my_check.sql) or [`soda/my_check.yml`](../soda/my_check.yml). Remove the comment marks from the starter's three lines. Then change them to your own rule.
+2. Open [`tests/my_check.sql`](../tests/my_check.sql) or [`soda/my_check.yml`](../soda/my_check.yml). Remove the comment marks from the starter's lines. Then change them to your own rule.
 
 > **Hint:** `check.py` scans a Soda check on the morning of 2 June. A query test runs on the whole table.
 

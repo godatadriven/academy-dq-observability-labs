@@ -1,0 +1,12 @@
+# Lab 3, Part A · A check on the raw events. The steps: labs/lab3.md
+# The payment team owns the raw events. They load them with their own sync, not with dbt.
+# In the sandbox, a dbt seed stands in for that sync. Soda checks the table either way.
+
+checks for raw_pos_payments:
+  - events_without_amount = 0:
+      events_without_amount query: |
+        select count(*)
+        from raw_pos_payments
+        where paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date
+          and false
+      name: "raw: every event of yesterday has an amount"
