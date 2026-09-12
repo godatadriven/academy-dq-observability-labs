@@ -3,7 +3,7 @@
 version: 2
 
 semantic_models:
-  - name: payments
+  - name: pos_payments
     description: The payments table, as the semantic layer sees it.
     model: ref('stg_pos_payments')
     defaults:
@@ -27,6 +27,27 @@ semantic_models:
         agg: count
         expr: payment_id
 
+  # The bank: what it received each day. Finance compares revenue with it.
+  - name: bank_deposits
+    description: The bank deposits, one row per day.
+    model: ref('bank_deposits')
+    defaults:
+      agg_time_dimension: deposit_date
+    entities:
+      - name: deposit_day
+        type: primary
+        expr: deposit_date
+    dimensions:
+      - name: deposit_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: deposit_eur
+        description: What the bank received, in euros.
+        agg: sum
+        expr: amount_eur
+
 metrics:
   # Module 1's one definition of revenue. Owner: Sam, in finance.
   - name: revenue
@@ -35,6 +56,14 @@ metrics:
     type: simple
     type_params:
       measure: amount_eur
+
+  # What the bank received each day. Owner: Sam.
+  - name: bank
+    label: Bank
+    description: "What the bank received, in euros. Owner: Sam."
+    type: simple
+    type_params:
+      measure: deposit_eur
 
   # Your turn, in labs/lab5.md: add your metrics here.
 

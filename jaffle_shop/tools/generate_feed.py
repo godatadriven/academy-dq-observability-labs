@@ -6,7 +6,7 @@ Every fact comes from ../../module_1/case.md. Deterministic: same output every r
                                From 1 June (API v2.4) it says {"amount_cents": 450}.
                                The true amounts are in the file. The freeze is not:
                                it happens in models/staging/stg_pos_payments.sql,
-                               where the note fills the missing amount.
+                               where a patch fills the missing amount.
   seeds/raw_customers.csv      jaffle_shop's 100 customers, plus the café customers.
   seeds/bank_deposits.csv      what the bank received per day. The truth Sam compares with.
   seeds/orders_daily_extract.csv  Module 1's "Spot the defects" table, row for row.

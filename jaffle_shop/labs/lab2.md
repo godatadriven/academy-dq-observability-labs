@@ -1,12 +1,12 @@
-# Lab 2 · A gate on the parse
+# Lab 2 · A data contract on the staging model
 
-> **10 minutes** · **Goal:** a contract that stops the parse when the amount is missing.<br>
-> **You write:** the gate switched on, and two new promises.<br>
-> **Done when:** `uv run tools/check.py 2` says `4 of 4 done. Well done.` Then switch it off again.
+> **10 minutes** · **Goal:** a data contract that stops two bad changes: an empty amount, and an amount of the wrong type.<br>
+> **You write:** the data contract switched on, and a teammate's hotfix to test it.<br>
+> **Done when:** `uv run tools/check.py 2` says `3 of 3 done. Well done.` Then put both back.
 
 ### 1 · Read the file
 
-Open [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml). It is a contract: the columns that the parse promises to deliver. Here is its start:
+Open [`models/staging/lab2_contract.yml`](../models/staging/lab2_contract.yml). It is a data contract: the columns that `stg_pos_events` promises to deliver. dbt calls it a model contract. Here is its start:
 
 ```yaml
 models:
@@ -23,15 +23,15 @@ models:
 
 | Line | What it means |
 | --- | --- |
-| `- name: stg_pos_events` | The parse: the first dbt model. Every night it reads the payment app's events from raw, where they land as they are. An event is the message the app sends for each payment. |
-| `enforced: false` | The contract is off. With `true`, dbt checks every promise when it builds the parse. |
+| `- name: stg_pos_events` | The staging model that reads the events: the first dbt model. Every night it reads the payment app's events from raw, where they land as they are. An event is the message the app sends for each payment. |
+| `enforced: false` | The data contract is off. With `true`, dbt checks every promise when it builds this model. |
 | `- name: amount` | One promised column. |
 | `data_type: integer` | Its type: a whole number, in cents. |
 | `constraints:` / `- type: not_null` | A rule on the column: it can never be empty. |
 
-When the data breaks a promise, dbt stops the build. That is the gate. On 1 June the app renamed `amount` to `amount_cents`, so the parse finds `amount` empty.
+When the data breaks a promise, dbt stops the build. On 1 June the app renamed `amount` to `amount_cents`, so `stg_pos_events` finds `amount` empty.
 
-### 2 · Run the parse
+### 2 · Build the staging model
 
 ```bash
 uv run dbt run --select stg_pos_events
@@ -41,28 +41,39 @@ uv run dbt run --select stg_pos_events
 Done. PASS=1 WARN=0 ERROR=0 ...
 ```
 
-The contract is off, so the empty amounts get through.
+The data contract is off, so the empty amounts get through.
 
 ---
 
 ### 3 · Your turn
 
-**Task.** Switch the contract on, and add two promises:
-
-- `payment_method` can never be empty, the same way as `amount`.
-- Every amount is above 0. This rule is not a `not_null`: it is the type `check`, with an `expression`.
-
-> **Hint:** dbt's page on [constraints](https://docs.getdbt.com/reference/resource-properties/constraints) shows every type of rule, with an example of each.
-
-Run the parse again. It stops, and the error has this line:
+**Task 1.** Switch the data contract on: `enforced: true`. Save, and build it again:
 
 ```bash
 uv run dbt run --select stg_pos_events
 ```
 
+It stops, and the error has this line. The empty amounts never land.
+
 ```
 Constraint Error: NOT NULL constraint failed: stg_pos_events__dbt_tmp.amount
 ```
+
+**Task 2.** A teammate sees the empty amounts and ships a quick hotfix: read `amount`, or else `amount_cents`. Open [`models/staging/stg_pos_events.sql`](../models/staging/stg_pos_events.sql). Replace line 10, the `amount` line, with their line:
+
+```sql
+    cast(coalesce(json_extract_string(event, '$.amount'), json_extract_string(event, '$.amount_cents')) as decimal(12, 2)) as amount,
+```
+
+Save, and build again. No amount is empty now, so a `not_null` test would pass. The data contract stops it anyway:
+
+```
+| amount      | DECIMAL(12,2)   | INTEGER       | data type mismatch |
+```
+
+The data contract promised whole cents. The hotfix gives decimals, and it mixes euros (`7.30`) with cents (`450`).
+
+> **Hint:** dbt's page on [model contracts](https://docs.getdbt.com/docs/mesh/govern/model-contracts) explains what dbt compares before it builds.
 
 ### 4 · Check
 
@@ -71,18 +82,24 @@ uv run tools/check.py 2
 ```
 
 ```
-4 of 4 done. Well done.
+3 of 3 done. Well done.
 ```
 
-### 5 · Switch it off again
+### 5 · Put both back
 
-Change it back to `enforced: false`, and save. The next labs need the Frozen Payments in the table.
+Undo the hotfix, and switch the data contract off again. The next labs need the Frozen Payments in the table.
+
+```bash
+git checkout models/staging/stg_pos_events.sql
+```
+
+Change `enforced: true` back to `enforced: false`, and save. Then:
 
 ```bash
 uv run dbt run
 ```
 
-The last line has `ERROR=0`. Now `check.py 2` shows ✗ on "the contract is on", and `2 of 3 done`. That is correct: it is off again.
+The last line has `ERROR=0`. Now `check.py 2` shows ✗ lines. That is correct: both are back.
 
 ---
 
@@ -93,4 +110,4 @@ Promise that `payment_id` is never in the table twice.
 ### Stuck?
 
 - A ✗ line says what is wrong. Fix it, save (Cmd+S, or Ctrl+S on Windows), and check again.
-- Later, `dbt run` shows `ERROR=1`: the contract is still on. Do step 5.
+- Later, `dbt run` shows `ERROR=1`: the data contract is still on, or the hotfix is still in. Do step 5.

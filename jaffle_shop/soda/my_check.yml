@@ -1,3 +1,12 @@
 # Lab 6 · Your own check, as a Soda check. The steps: labs/lab6.md
-# Write your check below. soda/lab3_checks.yml shows the shape.
 # Or write a query test in tests/my_check.sql instead. One of the two is enough.
+#
+# The starter below is a working check: every payment of yesterday has a payment method.
+# The filter line keeps it to yesterday, the morning in NOW, like the checks in Lab 3.
+# Remove the "# " at the start of its four lines. Then change them to your own rule.
+# soda/lab3_checks.yml and soda/lab3_repeat.yml show more shapes.
+#
+# checks for stg_pos_payments:
+#   - missing_count(payment_method) = 0:
+#       name: "completeness: every payment has a payment method"
+#       filter: paid_at >= '${NOW}'::date - interval 1 day and paid_at < '${NOW}'::date

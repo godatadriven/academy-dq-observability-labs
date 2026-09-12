@@ -1,4 +1,10 @@
 -- Lab 6 · Your own check, as a query test. The steps: labs/lab6.md
--- A query test returns the bad rows. No rows back means that the test passes.
--- Write your query below. tests/lab1_updated_before_placed.sql shows the shape.
 -- Or write a Soda check in soda/my_check.yml instead. One of the two is enough.
+--
+-- A query test returns the bad rows. No rows back means that the test passes.
+-- The starter below is a working check: every amount is between 280 and 6000 cents.
+-- Remove the "-- " at the start of its three lines. Then change them to your own rule.
+--
+-- select payment_id, amount
+-- from {{ ref('stg_pos_payments') }}
+-- where amount < 280 or amount > 6000

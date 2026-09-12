@@ -1,6 +1,6 @@
 """The reorder agent's two tools. Module 1, slide 9: "an agent reorders stock ... Nobody looks."
 
-    python tools/agent_tools.py read 2026-06-02            yesterday's takings, for the morning of 2 June
+    python tools/agent_tools.py read 2026-06-02            yesterday's revenue, for the morning of 2 June
     python tools/agent_tools.py order 161 "why this amount" tomorrow's order
 
 The agent (tools/reorder_agent.sh) can run these two commands and nothing else.
@@ -10,10 +10,10 @@ import sys
 
 import duckdb
 
-# Lab 4 · The gate: run your Lab 3 checks before the agent reads. The steps: labs/lab4.md
+# Lab 4 · Checks first: run your Lab 3 checks before the agent reads. The steps: labs/lab4.md
 # False: the agent reads whatever the table says, as at the Jaffle Shop.
-# True: if a check fails, the agent gets HOLD instead of the takings.
-GATE = False
+# True: if a check fails, the agent gets HOLD instead of the revenue.
+CHECKS_FIRST = False
 
 
 def run_checks(day: str) -> list[str]:
@@ -30,19 +30,19 @@ def run_checks(day: str) -> list[str]:
     return failed or [f"the scan did not finish (exit code {scan.returncode})"]
 
 
-def read_takings(day: str) -> str:
-    """Yesterday's takings, as the payments table has them, on the morning of `day`."""
-    if GATE:
+def read_revenue(day: str) -> str:
+    """Yesterday's revenue, as the payments table has it, on the morning of `day`."""
+    if CHECKS_FIRST:
         failed = run_checks(day=day)
         if failed:
             return f"HOLD: {len(failed)} check{'s' if len(failed) != 1 else ''} failed. " + "; ".join(failed)
     con = duckdb.connect("jaffle_shop.duckdb", read_only=True)
-    takings = con.execute(
+    revenue = con.execute(
         "select sum(amount) / 100.0 from stg_pos_payments where paid_at::date = cast(? as date) - 1",
         [day],
     ).fetchone()[0] or 0
     con.close()
-    return f"Yesterday's takings: EUR {takings:,.2f}"
+    return f"Yesterday's revenue: EUR {revenue:,.2f}"
 
 
 def place_order(kg: int, reason: str) -> str:
@@ -53,7 +53,7 @@ def place_order(kg: int, reason: str) -> str:
 if __name__ == "__main__":
     command = sys.argv[1] if len(sys.argv) > 1 else ""
     if command == "read" and len(sys.argv) == 3:
-        print(read_takings(day=sys.argv[2]))
+        print(read_revenue(day=sys.argv[2]))
     elif command == "order" and len(sys.argv) >= 3:
         print(place_order(kg=int(sys.argv[2]), reason=" ".join(sys.argv[3:])))
     else:

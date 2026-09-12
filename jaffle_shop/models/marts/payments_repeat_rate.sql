@@ -1,6 +1,6 @@
 -- Module 1's example standard, "below 20% repeats": how many of a day's payments equal
 -- that customer's previous payment? A first payment has nothing to compare with, so it is
--- not counted. Normal: about 6 in 100. From 1 June: every one.
+-- not counted. Normal: 4 to 10 in 100. From 1 June: every one.
 with ordered as (
     select
         payment_id, customer_id, amount, paid_at::date as pay_date,
