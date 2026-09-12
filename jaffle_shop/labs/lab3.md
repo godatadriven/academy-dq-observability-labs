@@ -1,6 +1,6 @@
 # Lab 3 · Checks on the payments table
 
-> **Part A 15 minutes, Part B 10 minutes** · **Goal:** Soda checks that stay quiet on a normal morning, and catch the Frozen Payments.<br>
+> **Part A 15 minutes, Part B 10 minutes** · **Goal:** Soda checks that pass on a normal morning, and catch the Frozen Payments.<br>
 > **You write:** Part A, two checks. Part B, a warning level and a failure level.<br>
 > **Done when:** `uv run tools/check.py 3a`, then `uv run tools/check.py 3b`, say `Well done.`
 
@@ -72,7 +72,7 @@ uv run tools/check.py 3a
 
 ### 5 · Read the file
 
-Open [`soda/lab3_repeat.yml`](../soda/lab3_repeat.yml). It is Module 1's rule: ring when too many payments repeat the customer's last amount.
+Open [`soda/lab3_repeat.yml`](../soda/lab3_repeat.yml). It is Module 1's rule: alert when too many payments repeat the customer's last amount.
 
 ```yaml
 checks for payments_repeat_rate:

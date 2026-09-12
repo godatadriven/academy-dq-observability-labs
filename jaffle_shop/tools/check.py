@@ -107,7 +107,7 @@ def lab1() -> list[bool]:
     ]
 
 
-# Lab 2 · a contract on the parse
+# Lab 2 · a data contract on the staging model
 
 def lab2() -> list[bool]:
     contract = read_yaml("models/staging/lab2_contract.yml")
@@ -122,7 +122,7 @@ def lab2() -> list[bool]:
     extra(any(k.get("type") in ("primary_key", "unique") for k in columns.get("payment_id", [])),
           "payment_id is never in twice", "payment_id has no primary_key or unique rule yet.")
     results = [
-        show(on, "Task: the contract is on", "enforced is not true."),
+        show(on, "Task: the data contract is on", "enforced is not true."),
         show(method, "Task: payment_method can never be empty", "payment_method has no not_null rule yet."),
         show(above, "Task: every amount is above 0", "amount has no check rule with 'amount > 0' yet."),
     ]
@@ -132,10 +132,10 @@ def lab2() -> list[bool]:
         if "Constraint Error" in out:
             wrong = "The build stops on another rule, not on the empty amount."
         elif "ERROR=0" in out:
-            wrong = "The parse builds: nothing stops it."
+            wrong = "stg_pos_events builds: nothing stops it."
         else:
-            wrong = "dbt cannot build the parse: " + next((l.strip() for l in out.splitlines() if "Error" in l), "")
-        results.append(show(stops, "The gate stops the parse on the 1 June events", wrong))
+            wrong = "dbt cannot build stg_pos_events: " + next((l.strip() for l in out.splitlines() if "Error" in l), "")
+        results.append(show(stops, "The gate stops stg_pos_events on the 1 June events", wrong))
     return results
 
 
@@ -216,7 +216,7 @@ def lab3b() -> list[bool]:
     ]
 
 
-# Lab 4 · readers, and the agent's gate
+# Lab 4 · readers, and checks in front of the agent
 
 def lab4a() -> list[bool]:
     doc = read_yaml("models/lab4_exposures.yml")
@@ -244,13 +244,13 @@ def lab4a() -> list[bool]:
 
 
 def lab4b() -> list[bool]:
-    gate = re.search(r"^GATE\s*=\s*True", open("tools/agent_tools.py").read(), re.M) is not None
-    results = [show(gate, "Task: the gate is on", "GATE is not True in tools/agent_tools.py.")]
-    if gate:
+    first = re.search(r"^CHECKS_FIRST\s*=\s*True", open("tools/agent_tools.py").read(), re.M) is not None
+    results = [show(first, "Task: your checks run before the agent reads", "CHECKS_FIRST is not True in tools/agent_tools.py.")]
+    if first:
         results.append(show("HOLD" in run("python", "tools/agent_tools.py", "read", "2026-06-02"),
-                            "2 June: the agent gets HOLD", "The agent still gets the takings on 2 June."))
-        results.append(show("Yesterday's takings" in run("python", "tools/agent_tools.py", "read", "2026-05-31"),
-                            "31 May: the agent gets the takings",
+                            "2 June: the agent gets HOLD", "The agent still gets the revenue on 2 June."))
+        results.append(show("Yesterday's revenue" in run("python", "tools/agent_tools.py", "read", "2026-05-31"),
+                            "31 May: the agent gets the revenue",
                             "The agent gets HOLD on a normal day: one of your Lab 3 checks fails on 31 May."))
     return results
 
@@ -290,8 +290,7 @@ def lab5() -> list[bool]:
 
 def answers() -> dict[str, str]:
     """Each answer in labs/my_check.md, from the same line as its label."""
-    labels = ["The standard, in one sentence", "The limit, as a number", "The owner, a person's name",
-              "Where it runs, and when", "Why this kind of check"]
+    labels = ["The standard, with its number", "The owner, a person's name", "Why this kind of check"]
     lines = [line.strip() for line in open("labs/my_check.md").read().splitlines()]
     return {label: next((line[len(label) + 1:].strip() for line in lines if line.startswith(label + ":")), "")
             for label in labels}
@@ -332,12 +331,9 @@ def lab6() -> list[bool]:
     else:
         code_what, code_wrong = "Your check runs in the sandbox", "soda/my_check.yml and tests/my_check.sql have no check yet."
     return [
-        show(bool(found.get("The standard, in one sentence")), "Your standard, in one sentence",
-             "The standard is empty."),
-        show(bool(re.search(r"\d", found.get("The limit, as a number", ""))), "A number in the limit",
-             "The limit has no number."),
+        show(bool(re.search(r"\d", found.get("The standard, with its number", ""))), "Your standard, with its number",
+             "The standard has no number." if found.get("The standard, with its number") else "The standard is empty."),
         show(person(found.get("The owner, a person's name")), "A person as owner", "The owner is not a person's name."),
-        show(bool(found.get("Where it runs, and when")), "Where it runs, and when", "This answer is empty."),
         show(bool(found.get("Why this kind of check")), "Why this kind of check", "This answer is empty."),
         show(soda_ok or test_ok, code_what, code_wrong),
     ]

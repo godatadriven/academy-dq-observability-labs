@@ -1,7 +1,7 @@
 # Lab 4 · Every reader, and checks in front of the agent
 
 > **Part A 12 minutes, Part B 12 minutes** · **Goal:** name every reader of the payments table, and stop the agent from reading bad data.<br>
-> **You write:** Part A, owners and a new reader. Part B, the gate switched on.<br>
+> **You write:** Part A, owners and a new reader. Part B, your checks in front of the agent.<br>
 > **Done when:** `uv run tools/check.py 4a`, then `uv run tools/check.py 4b`, say `Well done.`
 
 ## Part A · Every reader, named
@@ -70,14 +70,14 @@ uv run tools/check.py 4a
 
 ### 5 · Read the agent's numbers
 
-The reorder agent orders tomorrow's ingredients from yesterday's takings: the money the cafés took. This is what it reads on the morning of 2 June:
+The reorder agent orders tomorrow's ingredients from yesterday's revenue: the money the cafés took. This is what it reads on the morning of 2 June:
 
 ```bash
 uv run python tools/agent_tools.py read 2026-06-02
 ```
 
 ```
-Yesterday's takings: EUR 4,012.80
+Yesterday's revenue: EUR 4,012.80
 ```
 
 It looks normal, but it is built from frozen amounts. The agent orders from it.
@@ -86,9 +86,9 @@ It looks normal, but it is built from frozen amounts. The agent orders from it.
 
 ### 6 · Your turn
 
-Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the gate: `GATE = False`. With `GATE = True`, the agent first runs your Lab 3 checks for that morning. If a check fails, the agent gets HOLD instead of the takings.
+Open [`tools/agent_tools.py`](../tools/agent_tools.py). Line 16 is the switch: `CHECKS_FIRST = False`. With `CHECKS_FIRST = True`, the agent first runs your Lab 3 checks for that morning. If a check fails, the agent gets HOLD instead of the revenue.
 
-**Task.** Switch the gate on, and save.
+**Task.** Set `CHECKS_FIRST = True`, and save.
 
 ### 7 · Check
 
@@ -100,7 +100,7 @@ uv run tools/check.py 4b
 3 of 3 done. Well done.
 ```
 
-The agent gets HOLD on 2 June. On the morning of 31 May, it still gets the takings.
+The agent gets HOLD on 2 June. On the morning of 31 May, it still gets the revenue.
 
 ### Stuck?
 

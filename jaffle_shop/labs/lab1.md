@@ -69,7 +69,7 @@ where order_date > updated_at
 | `from {{ ref('orders_daily_extract') }}` | The table. `ref(...)` is how dbt names a table. |
 | `where ...` | The rule, turned around: keep only the rows that break it. |
 
-Write a new rule the same way: **an order is not loaded before it is placed.** The columns are `order_date` (placed) and `_loaded_at` (loaded). Write it in [`tests/lab1_loaded_before_placed.sql`](../tests/lab1_loaded_before_placed.sql), under the comments.
+Write a new rule the same way: **no order is loaded before its order date.** The columns are `order_date` (the day the order was placed) and `_loaded_at` (the moment the row arrived in the table). Write it in [`tests/lab1_loaded_before_placed.sql`](../tests/lab1_loaded_before_placed.sql), under the comments.
 
 ### 4 · Check
 
